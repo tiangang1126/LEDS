@@ -1,0 +1,4 @@
+﻿comparison,joint_rule_acc_diff_pct,noninferiority_margin_pct,passes_descriptive_margin
+T=0.0 minus T=0.2,-0.14,3.0,True
+T=0.0 minus T=0.5,0.41,3.0,True
+T=0.0 minus T=0.7,0.14,3.0,True

@@ -31,6 +31,31 @@ def append_jsonl(path: str, row: dict) -> None:
         f.write(json.dumps(row, ensure_ascii=False) + "\n")
 
 
+def completed_keys(path: str, model: str, mock: bool) -> set:
+    """Return successful (prompt_id, temperature, repeat_id) keys for resume."""
+    if not os.path.exists(path):
+        return set()
+
+    keys = set()
+    with open(path, "r", encoding="utf-8") as f:
+        for line in f:
+            if not line.strip():
+                continue
+            try:
+                row = json.loads(line)
+            except json.JSONDecodeError:
+                continue
+            expected_model = "mock-rule-oracle" if mock else model
+            if row.get("model") != expected_model:
+                continue
+            if row.get("api_error") is not None:
+                continue
+            if not row.get("json_valid", False):
+                continue
+            keys.add((row.get("prompt_id"), float(row.get("temperature")), int(row.get("repeat_id"))))
+    return keys
+
+
 def call_api(system_prompt: str, user_prompt: str, temperature: float) -> str:
     import requests
     payload = {
@@ -75,6 +100,8 @@ def main() -> None:
     ap.add_argument("--temperatures", nargs="+", default=["0", "0.2", "0.5", "0.7"])
     ap.add_argument("--repeats", type=int, default=3)
     ap.add_argument("--mock", action="store_true")
+    ap.add_argument("--resume", action="store_true",
+                    help="append to an existing output and skip successful completed cells")
     ap.add_argument("--limit", type=int, default=None,
                     help="optional small pilot limit over prompt rows")
     args = ap.parse_args()
@@ -88,17 +115,22 @@ def main() -> None:
         print("[WARN] DEEPSEEK_API_KEY is not set; using mock mode.")
         print("[WARN] Mock outputs are not publishable paper evidence.")
 
-    if os.path.exists(args.output):
+    completed = completed_keys(args.output, config.LLM_MODEL, mock) if args.resume else set()
+    if os.path.exists(args.output) and not args.resume:
         raise FileExistsError(
             f"{args.output} already exists. Move it first to avoid mixing runs.")
 
     total = len(rows) * len(temps) * args.repeats
-    done = 0
+    done = len(completed)
     print(f"mode={'mock' if mock else 'api'}, prompts={len(rows)}, "
-          f"temps={temps}, repeats={args.repeats}, calls={total}")
+          f"temps={temps}, repeats={args.repeats}, calls={total}, "
+          f"resume_completed={len(completed)}")
     for temp in temps:
         for repeat_id in range(1, args.repeats + 1):
             for row in rows:
+                key = (row["prompt_id"], temp, repeat_id)
+                if key in completed:
+                    continue
                 started = time.perf_counter()
                 if mock:
                     oracle = {
