@@ -1,0 +1,45 @@
+{
+  "mode": "api(deepseek-chat)",
+  "rows": [
+    {
+      "N": 50,
+      "leds_calls": 93,
+      "leds_steps": 6,
+      "leds_wall_seconds": 126.105,
+      "full_calls": 450,
+      "full_steps": 9,
+      "full_wall_seconds": 205.321,
+      "speedup_calls": 4.8
+    },
+    {
+      "N": 100,
+      "leds_calls": 250,
+      "leds_steps": 11,
+      "leds_wall_seconds": 345.102,
+      "full_calls": 900,
+      "full_steps": 9,
+      "full_wall_seconds": 178.065,
+      "speedup_calls": 3.6
+    },
+    {
+      "N": 300,
+      "leds_calls": 829,
+      "leds_steps": 13,
+      "leds_wall_seconds": 1149.963,
+      "full_calls": 2100,
+      "full_steps": 7,
+      "full_wall_seconds": 357.247,
+      "speedup_calls": 2.5
+    },
+    {
+      "N": 1000,
+      "leds_calls": 2607,
+      "leds_steps": 12,
+      "leds_wall_seconds": 4166.793,
+      "full_calls": 8000,
+      "full_steps": 8,
+      "full_wall_seconds": 1253.793,
+      "speedup_calls": 3.1
+    }
+  ]
+}

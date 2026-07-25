@@ -1,0 +1,48 @@
+{
+  "mode": "api(deepseek-chat)",
+  "config": "exp1_scalefree.json",
+  "N": 300,
+  "LEDS": {
+    "steps": 11,
+    "api_calls": 701,
+    "penetration": 27.0,
+    "converged": true,
+    "invalid": 0,
+    "fallback": 0,
+    "wall_seconds": 883.97
+  },
+  "FullPolling": {
+    "steps": 8,
+    "api_calls": 2400,
+    "penetration": 7.333333333333333,
+    "converged": true,
+    "invalid": 0,
+    "fallback": 0,
+    "wall_seconds": 470.75
+  },
+  "MonteCarlo": {
+    "runs": 5,
+    "temperature": 0.7,
+    "api_calls_total": 3993,
+    "invalid_total": 4,
+    "fallback_total": 0,
+    "invalid_rate": 0.1,
+    "penetration_mean": 17.2,
+    "penetration_ci95": 4.6,
+    "penetration_samples": [
+      8.0,
+      21.0,
+      18.0,
+      19.3,
+      19.7
+    ],
+    "wall_seconds": 7011.59
+  },
+  "IC": {
+    "runs": 100,
+    "edge_prob": 0.1,
+    "api_calls_total": 0,
+    "penetration_mean": 0.7,
+    "penetration_ci95": 0.2
+  }
+}

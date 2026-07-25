@@ -1,0 +1,36 @@
+{
+  "mode": "api(deepseek-chat)",
+  "config": "exp1_scalefree.json",
+  "N": 300,
+  "runs": 3,
+  "independent_runs": {
+    "penetration_samples": [
+      27.0,
+      27.3,
+      22.7
+    ],
+    "penetration_mean": 25.67,
+    "penetration_std": 2.13,
+    "penetration_range": 4.67,
+    "steps_samples": [
+      11,
+      11,
+      12
+    ]
+  },
+  "pairwise_divergence": {
+    "pairwise_hamming_pct": [
+      0.33,
+      21.0,
+      20.67
+    ],
+    "hamming_mean_pct": 14.0,
+    "hamming_max_pct": 21.0
+  },
+  "cache_replay": {
+    "seed_penetration": 28.3,
+    "replay_penetration": 28.3,
+    "replay_hamming_pct": 0.0,
+    "exact_replay": true
+  }
+}

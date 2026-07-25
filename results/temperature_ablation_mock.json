@@ -1,0 +1,217 @@
+{
+  "mode": "mock",
+  "model": "mock-rule-oracle",
+  "temperatures": [
+    0.0,
+    0.2,
+    0.5,
+    0.7
+  ],
+  "top_p": 1.0,
+  "t_max": 30,
+  "cache": "disabled",
+  "prompt_level": {
+    "suite": "compact",
+    "num_cases": 54,
+    "repeats": 1,
+    "by_temperature": {
+      "0.0": {
+        "total_decisions": 54,
+        "api_calls": 54,
+        "invalid_raw_outputs": 0,
+        "fallbacks": 0,
+        "raw_invalid_rate": 0.0,
+        "fallback_rate": 0.0,
+        "rule_exact_rate": 100.0,
+        "stance_consistency_rate": 100.0,
+        "action_consistency_rate": 100.0,
+        "per_persona_exact_rate": {
+          "susceptible": 100.0,
+          "neutral": 100.0,
+          "fact_checker": 100.0
+        },
+        "wall_seconds": 0.0
+      },
+      "0.2": {
+        "total_decisions": 54,
+        "api_calls": 54,
+        "invalid_raw_outputs": 0,
+        "fallbacks": 0,
+        "raw_invalid_rate": 0.0,
+        "fallback_rate": 0.0,
+        "rule_exact_rate": 100.0,
+        "stance_consistency_rate": 100.0,
+        "action_consistency_rate": 100.0,
+        "per_persona_exact_rate": {
+          "susceptible": 100.0,
+          "neutral": 100.0,
+          "fact_checker": 100.0
+        },
+        "wall_seconds": 0.0
+      },
+      "0.5": {
+        "total_decisions": 54,
+        "api_calls": 54,
+        "invalid_raw_outputs": 0,
+        "fallbacks": 0,
+        "raw_invalid_rate": 0.0,
+        "fallback_rate": 0.0,
+        "rule_exact_rate": 100.0,
+        "stance_consistency_rate": 100.0,
+        "action_consistency_rate": 100.0,
+        "per_persona_exact_rate": {
+          "susceptible": 100.0,
+          "neutral": 100.0,
+          "fact_checker": 100.0
+        },
+        "wall_seconds": 0.0
+      },
+      "0.7": {
+        "total_decisions": 54,
+        "api_calls": 54,
+        "invalid_raw_outputs": 0,
+        "fallbacks": 0,
+        "raw_invalid_rate": 0.0,
+        "fallback_rate": 0.0,
+        "rule_exact_rate": 100.0,
+        "stance_consistency_rate": 100.0,
+        "action_consistency_rate": 100.0,
+        "per_persona_exact_rate": {
+          "susceptible": 100.0,
+          "neutral": 100.0,
+          "fact_checker": 100.0
+        },
+        "wall_seconds": 0.0
+      }
+    }
+  },
+  "simulation_level": {
+    "config": "exp1_scalefree.json",
+    "n_nodes": 300,
+    "runs_per_temperature": 2,
+    "schedule": "event",
+    "cache": "disabled",
+    "by_temperature": {
+      "0.0": {
+        "penetration": {
+          "mean": 47.667,
+          "std": 0.0,
+          "ci95": 0.0,
+          "min": 47.667,
+          "max": 47.667
+        },
+        "penetration_samples": [
+          47.667,
+          47.667
+        ],
+        "steps": {
+          "mean": 9,
+          "std": 0.0,
+          "ci95": 0.0,
+          "min": 9,
+          "max": 9
+        },
+        "convergence_rate": 100.0,
+        "api_calls_total": 1122,
+        "api_calls_mean": 561.0,
+        "invalid_raw_outputs_total": 0,
+        "fallbacks_total": 0,
+        "raw_invalid_rate": 0.0,
+        "fallback_rate": 0.0,
+        "mean_pairwise_hamming": 0.0,
+        "mean_hamming_vs_temp0_ref": 0.0,
+        "wall_seconds": 0.01
+      },
+      "0.2": {
+        "penetration": {
+          "mean": 47.667,
+          "std": 0.0,
+          "ci95": 0.0,
+          "min": 47.667,
+          "max": 47.667
+        },
+        "penetration_samples": [
+          47.667,
+          47.667
+        ],
+        "steps": {
+          "mean": 9,
+          "std": 0.0,
+          "ci95": 0.0,
+          "min": 9,
+          "max": 9
+        },
+        "convergence_rate": 100.0,
+        "api_calls_total": 1122,
+        "api_calls_mean": 561.0,
+        "invalid_raw_outputs_total": 0,
+        "fallbacks_total": 0,
+        "raw_invalid_rate": 0.0,
+        "fallback_rate": 0.0,
+        "mean_pairwise_hamming": 0.0,
+        "mean_hamming_vs_temp0_ref": 0.0,
+        "wall_seconds": 0.0
+      },
+      "0.5": {
+        "penetration": {
+          "mean": 47.667,
+          "std": 0.0,
+          "ci95": 0.0,
+          "min": 47.667,
+          "max": 47.667
+        },
+        "penetration_samples": [
+          47.667,
+          47.667
+        ],
+        "steps": {
+          "mean": 9,
+          "std": 0.0,
+          "ci95": 0.0,
+          "min": 9,
+          "max": 9
+        },
+        "convergence_rate": 100.0,
+        "api_calls_total": 1122,
+        "api_calls_mean": 561.0,
+        "invalid_raw_outputs_total": 0,
+        "fallbacks_total": 0,
+        "raw_invalid_rate": 0.0,
+        "fallback_rate": 0.0,
+        "mean_pairwise_hamming": 0.0,
+        "mean_hamming_vs_temp0_ref": 0.0,
+        "wall_seconds": 0.0
+      },
+      "0.7": {
+        "penetration": {
+          "mean": 47.667,
+          "std": 0.0,
+          "ci95": 0.0,
+          "min": 47.667,
+          "max": 47.667
+        },
+        "penetration_samples": [
+          47.667,
+          47.667
+        ],
+        "steps": {
+          "mean": 9,
+          "std": 0.0,
+          "ci95": 0.0,
+          "min": 9,
+          "max": 9
+        },
+        "convergence_rate": 100.0,
+        "api_calls_total": 1122,
+        "api_calls_mean": 561.0,
+        "invalid_raw_outputs_total": 0,
+        "fallbacks_total": 0,
+        "raw_invalid_rate": 0.0,
+        "fallback_rate": 0.0,
+        "mean_pairwise_hamming": 0.0,
+        "mean_hamming_vs_temp0_ref": 0.0,
+        "wall_seconds": 0.0
+      }
+    }
+  }
+}

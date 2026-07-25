@@ -1,0 +1,42 @@
+{
+  "exp1_smallworld": {
+    "label": "小世界网络",
+    "mode": "api(deepseek-reasoner)",
+    "converged": false,
+    "total_steps": 30,
+    "total_llm_calls": 372,
+    "invalid_parse_count": 0,
+    "fallback_count": 0,
+    "final_penetration": 28.7
+  },
+  "exp1_scalefree": {
+    "label": "无标度网络(随机核查员)",
+    "mode": "api(deepseek-reasoner)",
+    "converged": true,
+    "total_steps": 8,
+    "total_llm_calls": 602,
+    "invalid_parse_count": 0,
+    "fallback_count": 0,
+    "final_penetration": 56.3
+  },
+  "exp2_edge_defense": {
+    "label": "边缘部署",
+    "mode": "api(deepseek-reasoner)",
+    "converged": true,
+    "total_steps": 9,
+    "total_llm_calls": 637,
+    "invalid_parse_count": 0,
+    "fallback_count": 0,
+    "final_penetration": 65.7
+  },
+  "exp2_hub_defense": {
+    "label": "中心部署",
+    "mode": "api(deepseek-reasoner)",
+    "converged": true,
+    "total_steps": 7,
+    "total_llm_calls": 385,
+    "invalid_parse_count": 0,
+    "fallback_count": 0,
+    "final_penetration": 0.3
+  }
+}

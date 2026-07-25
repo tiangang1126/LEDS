@@ -1,0 +1,7 @@
+﻿temperature,persona,n,joint_rule_acc,joint_rule_ci95_low,joint_rule_ci95_high,stance_acc,action_acc,json_valid
+0.0,fact_checker,8,100.0,67.56,100.0,100.0,100.0,100.0
+0.0,neutral,8,100.0,67.56,100.0,100.0,100.0,100.0
+0.0,susceptible,8,100.0,67.56,100.0,100.0,100.0,100.0
+0.2,fact_checker,8,100.0,67.56,100.0,100.0,100.0,100.0
+0.2,neutral,8,100.0,67.56,100.0,100.0,100.0,100.0
+0.2,susceptible,8,100.0,67.56,100.0,100.0,100.0,100.0

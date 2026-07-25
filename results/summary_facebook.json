@@ -1,0 +1,32 @@
+{
+  "fb_random": {
+    "label": "随机部署",
+    "mode": "api(deepseek-chat)",
+    "converged": true,
+    "total_steps": 6,
+    "total_llm_calls": 1000,
+    "invalid_parse_count": 0,
+    "fallback_count": 0,
+    "final_penetration": 0.0
+  },
+  "fb_edge": {
+    "label": "边缘部署",
+    "mode": "api(deepseek-chat)",
+    "converged": true,
+    "total_steps": 8,
+    "total_llm_calls": 1488,
+    "invalid_parse_count": 0,
+    "fallback_count": 0,
+    "final_penetration": 9.9
+  },
+  "fb_hub": {
+    "label": "中心部署",
+    "mode": "api(deepseek-chat)",
+    "converged": true,
+    "total_steps": 5,
+    "total_llm_calls": 669,
+    "invalid_parse_count": 0,
+    "fallback_count": 0,
+    "final_penetration": 0.0
+  }
+}

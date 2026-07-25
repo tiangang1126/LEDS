@@ -1,0 +1,54 @@
+{
+  "exp1_smallworld": {
+    "label": "小世界网络 (Watts-Strogatz)",
+    "mode": "api(deepseek-chat)",
+    "converged": false,
+    "total_steps": 30,
+    "total_llm_calls": 394,
+    "final_penetration": 17.0,
+    "final_stance_distribution": {
+      "Accept": 51,
+      "Reject": 113,
+      "Neutral": 136
+    }
+  },
+  "exp1_scalefree": {
+    "label": "无标度网络 (Barabási-Albert)",
+    "mode": "api(deepseek-chat)",
+    "converged": true,
+    "total_steps": 9,
+    "total_llm_calls": 662,
+    "final_penetration": 31.7,
+    "final_stance_distribution": {
+      "Accept": 95,
+      "Reject": 138,
+      "Neutral": 67
+    }
+  },
+  "exp2_edge_defense": {
+    "label": "边缘部署 (核查员@低度数节点)",
+    "mode": "api(deepseek-chat)",
+    "converged": true,
+    "total_steps": 10,
+    "total_llm_calls": 733,
+    "final_penetration": 30.0,
+    "final_stance_distribution": {
+      "Accept": 90,
+      "Reject": 153,
+      "Neutral": 57
+    }
+  },
+  "exp2_hub_defense": {
+    "label": "中心部署 (核查员@高度数 Hubs)",
+    "mode": "api(deepseek-chat)",
+    "converged": true,
+    "total_steps": 7,
+    "total_llm_calls": 438,
+    "final_penetration": 0.0,
+    "final_stance_distribution": {
+      "Accept": 0,
+      "Reject": 275,
+      "Neutral": 25
+    }
+  }
+}

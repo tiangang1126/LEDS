@@ -1,0 +1,46 @@
+[
+  {
+    "setting": "Full LEDS replay",
+    "event_trigger": "Yes",
+    "novelty_filter": "Yes",
+    "decision_record_map": "Yes",
+    "api_calls": 701,
+    "penetration": "28.3% -> 28.3%",
+    "run_divergence": "Not applicable",
+    "replay_hamming": "0.0%",
+    "interpretation": "Fixed decision records yield exact node-level replay."
+  },
+  {
+    "setting": "LEDS independent runs",
+    "event_trigger": "Yes",
+    "novelty_filter": "Yes",
+    "decision_record_map": "No shared map",
+    "api_calls": "about 700 per run",
+    "penetration": "25.67% mean, range 4.67 pp",
+    "run_divergence": "Hamming mean 14.0%, max 21.0%",
+    "replay_hamming": "Not applicable",
+    "interpretation": "Fresh cloud calls expose run-to-run nondeterminism."
+  },
+  {
+    "setting": "Full Polling LLM",
+    "event_trigger": "No",
+    "novelty_filter": "No/weak",
+    "decision_record_map": "Yes in baseline cache",
+    "api_calls": 2400,
+    "penetration": "7.3%",
+    "run_divergence": "Not systematically estimated",
+    "replay_hamming": "Not applicable",
+    "interpretation": "Repeatedly rejudging idle nodes changes diffusion semantics."
+  },
+  {
+    "setting": "High-temperature Monte Carlo (T=0.7)",
+    "event_trigger": "Yes",
+    "novelty_filter": "Yes",
+    "decision_record_map": "Independent samples",
+    "api_calls": 3993,
+    "penetration": "17.2% +/- 4.6%, samples [8.0, 21.0, 18.0, 19.3, 19.7]",
+    "run_divergence": "High sampling variance",
+    "replay_hamming": "Not applicable",
+    "interpretation": "Reference for high-temperature sampling, not a strict temperature ablation."
+  }
+]
