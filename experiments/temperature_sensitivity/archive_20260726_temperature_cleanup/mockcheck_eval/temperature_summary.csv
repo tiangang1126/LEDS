@@ -1,0 +1,3 @@
+﻿temperature,n,joint_rule_acc,joint_rule_ci95_low,joint_rule_ci95_high,stance_acc,action_acc,json_valid
+0.0,24,100.0,86.2,100.0,100.0,100.0,100.0
+0.2,24,100.0,86.2,100.0,100.0,100.0,100.0
