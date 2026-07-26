@@ -4,22 +4,22 @@
     "event_trigger": "Yes",
     "novelty_filter": "Yes",
     "decision_record_map": "Yes",
-    "api_calls": 701,
-    "penetration": "28.3% -> 28.3%",
+    "api_calls": "454 seed calls; 0/0/0 replay calls",
+    "penetration": "56.667% -> 56.667% / 56.667% / 56.667%",
     "run_divergence": "Not applicable",
-    "replay_hamming": "0.0%",
-    "interpretation": "Fixed decision records yield exact node-level replay."
+    "replay_hamming": "0.0% / 0.0% / 0.0%",
+    "interpretation": "Fixed decision records yield exact replay with final-state and trace hashes both matching."
   },
   {
     "setting": "LEDS independent runs",
     "event_trigger": "Yes",
     "novelty_filter": "Yes",
     "decision_record_map": "No shared map",
-    "api_calls": "about 700 per run",
-    "penetration": "25.67% mean, range 4.67 pp",
-    "run_divergence": "Hamming mean 14.0%, max 21.0%",
+    "api_calls": "439-450 cloud calls per run",
+    "penetration": "55.933% mean, 95% CI [55.587%, 56.280%], range 0.667 pp",
+    "run_divergence": "Hamming mean 1.400%, 95% CI [1.154%, 1.646%], max 1.667%; all five final-state hashes differ",
     "replay_hamming": "Not applicable",
-    "interpretation": "Fresh cloud calls expose run-to-run nondeterminism."
+    "interpretation": "Fresh zero-temperature cloud calls remain not trajectory-deterministic even when macro penetration is stable."
   },
   {
     "setting": "Full Polling LLM",
