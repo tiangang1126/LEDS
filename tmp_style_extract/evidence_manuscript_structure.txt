@@ -1,0 +1,284 @@
+P0001	[31]	
+P0002	[23]	LEDS：面向社会信息传播的可重放事件驱动LLM多智能体仿真协议
+P0003	[32]	作者姓名1，作者姓名2*
+P0004	[33]	（作者单位、城市及邮编待补充）
+P0005	[37]	摘  要  针对云端LLM社会仿真难以复核的问题，提出可重放事件驱动协议LEDS。该协议将传播建模为有限类型化事件转移过程，采用固定调度、新颖事件过滤和判定记录映射实现轨迹回放。补充Temperature敏感性实验在240个分层Prompt、4个温度和3次重复下获得2880条真实DeepSeek API输出，JSON合法率均为100%，不同温度下联合规则一致率稳定在66.81%～67.36%；同时零温度条件下仍有6.67%的Prompt出现三次调用不一致。K=5零温度独立运行实验进一步显示，在deepseek-v4-flash后端下，最终渗透率均值为55.933%，Student-t 95% CI为[55.587%,56.280%]，极差为0.667个百分点；但5次运行的最终状态哈希均不同，成对节点Hamming距离最高为1.667%。固定判定记录后的3次replay均不再调用云端模型，Hamming距离为0，final state hash和trace hash一致率均为100%。结果表明，LLM社会仿真需区分记录级可重放性、统计可复现性与经验有效性。
+P0006	[41]	关键词  大型语言模型，多智能体仿真，可重放性，事件驱动仿真，复杂网络，虚假信息干预
+P0007	[42]	引用格式  作者姓名1, 作者姓名2. LEDS：面向社会信息传播的可重放事件驱动LLM多智能体仿真协议[J]. 指挥与控制学报, 年, 卷(期): 页码
+P0008	[42]	DOI  [编辑部填写]
+P0009	[42]	开放科学计划（OSID）标识码：[投稿后按期刊要求补充]
+P0010	[34]	LEDS: A Replayable Event-Driven LLM Multi-Agent Simulation Protocol for Social Information Diffusion
+P0011	[35]	AUTHOR 1, AUTHOR 2*
+P0012	[36]	(Affiliation, City, Postal Code, China — to be completed)
+P0013	[40]	Abstract  A replayable event-driven protocol, LEDS, is proposed for auditable cloud-LLM social simulation. LEDS models diffusion as finite typed events, combines ordered scheduling, novelty filtering, and decision-record mapping, and separates replayability from run-level statistical reproducibility. A supplementary temperature-sensitivity ablation over 240 stratified prompts, four temperatures, and three repeats obtains 2,880 real DeepSeek API outputs. All conditions achieve 100% valid JSON, and joint rule consistency remains stable from 66.81% to 67.36%; nevertheless, 6.67% of prompts at Temperature=0 still produce inconsistent outputs across three calls. A K=5 zero-temperature probe on deepseek-v4-flash further shows a penetration mean of 55.933% with a Student-t 95% CI of [55.587%, 56.280%] and a range of 0.667 percentage points, while all five final-state hashes differ and the maximum pairwise Hamming distance reaches 1.667%. After fixing the decision records, three replay trials invoke zero cloud calls and exactly match the seed run in node states, final-state hash, and trace hash. These results show that LLM social simulation should distinguish record-level replayability, run-level statistical reproducibility, and empirical validity.
+P0014	[39]	Key words  large language model, multi-agent simulation, replayability, event-driven simulation, complex network, misinformation intervention
+P0015	[39]	Citation  AUTHOR 1, AUTHOR 2. LEDS: A replayable event-driven LLM multi-agent simulation protocol for social information diffusion[J]. Journal of Command and Control, year, volume(issue): pages
+P0016	[43]	1 引言
+P0017	[48]	探究信息与信念如何在复杂社会网络中扩散，是网络动力学与计算社会科学的核心命题 [1]。大型语言模型（Large Language Models, LLMs）在认知推理与零样本泛化上的突破 [2-3]，催生了基于 LLM 的多智能体仿真 [4-5]，使传统概率模型（如 SIR、Independent Cascade）无法描述的自然语言语义级说服过程成为可能。
+P0018	[48]	然而，近三年的研究焦点已由“LLM 智能体能否形成社会动力学”转向“仿真结果能否被验证、复核并迁移”。现有系统能够模拟意见演化、人格差异和影响扩散，但研究同时发现，模型偏差、人设敏感性、提示依赖和运行间波动会改变宏观结论 [6-11]。因此，降低采样温度只能减少显式采样噪声，不能替代协议层的版本固定、事件留痕、重复运行与区间估计。
+P0019	[48]	本文据此提出如下核心命题：LLM 社会仿真的可信复核不应仅依赖解码参数，而应由协议级可重放机制与统计级重复运行共同保证。本文提出 LEDS，并围绕该命题形成三项贡献：
+P0020	[48]	（1）提出 LLM 社交智能体仿真的双层可复现性定义与可重放事件建模方法。将社会信息传播形式化为有限状态、有限消息类型上的事件转移过程，明确区分固定判定记录条件下的轨迹可重放性、无缓存独立运行条件下的统计可复现性和面向真实社会行为的经验有效性，为云端 LLM 社会仿真实验的复核边界提供统一描述。
+P0021	[48]	（2）提出有序调度、新颖事件过滤和判定记录映射相结合的 LEDS 事件传播算法。算法仅调度收到新增消息的活跃节点，并对“发送节点—接收节点—消息类型”三元事件实施至多一次的传播约束；结合固定节点顺序、结构化状态转移和 Prompt/Response 记录，实现传播过程的逐事件审计，并给出轨迹唯一性、有限步终止条件与事件复杂度上界。
+P0022	[48]	（3）建立面向运行不确定性与记录回放一致性的双层验证方法。通过无缓存独立运行量化宏观渗透率和微观节点状态的运行间差异，通过固定记录回放检验逐节点轨迹一致性，并在不同 LLM 后端、合成网络和真实社交网络上验证方法适用性。事实核查员空间部署作为应用案例，用于说明忽略运行间不确定性可能导致不稳健的干预结论。
+P0023	[43]	2 研究现状
+P0024	[48]	传统传播模型以明确的转移概率和网络结构描述扩散过程：小世界网络的短路径特征 [12]、无标度网络中心节点的动力学作用 [13] 以及 SIR、Independent Cascade 等模型 [14-15] 均具有清晰的参数与重复运行机制。其局限并非“没有语义便必然低估传播”，而是难以直接表示同一信息在不同人设、上下文和辟谣暴露下产生的语义差异。LLM 判别器可补足这一表征能力，但同时引入模型偏差、提示敏感性和服务端不透明性。
+P0025	[48]	2024 年的研究开始系统化 LLM 增强的智能体建模。Gao 等从 agent-based modeling and simulation 的视角总结了生成式智能体的建模流程与开放问题 [6]；Chuang 等以 LLM 智能体网络模拟意见动力学 [7]；Hu 和 Collier 量化了人设设定对仿真输出的影响 [8]；Qu 和 Wang 则揭示了 LLM 公共意见模拟中的群体与主题偏差 [9]。这些工作共同表明，语言模型可以丰富微观决策语义，但宏观涌现并不自动获得经验有效性。
+P0026	[48]	2025 年以后，研究进一步转向专门的扩散系统与验证框架。LLM-AIDSim 将 LLM 决策引入社会网络影响扩散 [10]；Larooij 和 Törnberg 的批判性综述将 validation 明确为生成式社会仿真的中心挑战 [11]。截至 2026 年，最新 LLM 综述也把智能体化、工具化与可靠性治理列为重要发展方向 [16]。与上述工作相比，LEDS 不以更自由的对话能力为目标，而聚焦一个较窄但可检验的问题：在云端判定内核不可完全控制时，如何同时提供（i）固定判定记录的逐事件回放，(ii) 以事件驱动调度削减冗余评估；(iii) 系统量化事实核查员空间部署（中心 / 边缘 / 随机）的干预效能。该定位也限定了本文结论：LEDS 提升的是实验可核查性，而非对真实人类行为的效度证明。
+P0027	[43]	3 问题定义与LEDS事件传播算法
+P0028	[48]	针对上述问题，本文将 LEDS 抽象为冻结有向图上的有限事件传播算法，而非单纯的软件实现框架。算法核心不在于 API、JSON 或缓存本身，而在于：以有限状态空间约束 LLM 输出，以类型化消息事件驱动状态转移，以确定顺序调度消除额外轨迹分叉，并以判定记录映射把不可完全控制的云端调用转化为可索引、可审计、可回放的转移记录。
+P0029	[46]	3.1 LEDS整体架构与执行阶段
+P0030	[48]	LEDS 框架的运行逻辑严格遵循线性、单向的数据流转，以确保整个仿真周期的逻辑闭环与可重放的受控确定性。系统的整体运行被解耦为三个核心阶段，其架构拓扑如下所示：
+P0031	[51]	
+P0032	[51]	图1 LEDS整体架构与执行阶段
+P0033	[51]	Fig. 1 Architecture and execution stages of LEDS
+P0034	[48]	三个阶段的职责概述如下（各阶段的机制细节见 3.2 至 3.5 节）：阶段 1（静态初始化）只读解析预先固化的拓扑与人设，输出冻结的初始图状态 G_{t=0} 与首发事件队列 M_{t=0}，将网络结构与人设映射纳入协议输入；阶段 2（离散事件演化）按全局节点 ID 遍历收到新增消息的活跃节点，调用受约束 LLM 状态转移算子并解析结构化输出，产生下一状态 G_{t+1} 与新消息队列 M_{t+1}；阶段 3（收敛与评估）在事件队列耗空（M_T=∅）时聚合全网信念、计算渗透率并输出可逐源追踪的状态机日志。
+P0035	[46]	3.2 基于静态图的解耦加载模型
+P0036	[48]	现有方法常在运行时动态生成或更新网络边（Edges），从而把结构噪声混入语义传播过程。本文将社会网络抽象为静态有向图 G=(V,E)，并把节点集合 V、边集合 E 与人设字典 P 作为算法输入固定下来。仿真过程中不允许修改 E，因此不同运行之间的结构差异不再参与结果解释，后续差异可归因于判定内核、调度和事件传播机制。
+P0037	[46]	3.3 离散事件驱动的马尔可夫状态机
+P0038	[46]	形式化地，设冻结社会网络为 G=(V,E)，其中 V 为智能体集合，E⊆V×V 为有向传播边集合。节点 v_i 在时刻 t 的状态记为 s_i^t=(b_i^t,c_{i,r}^t,c_{i,d}^t)，其中 b_i^t∈{Accept,Reject,Neutral} 表示信念状态，c_{i,r}^t 与 c_{i,d}^t 分别表示累计接收谣言和辟谣消息的不同邻居数。类型化传播事件记为 e_k=(u_k,v_k,m_k,τ_k)，其中 u_k 为发送节点，v_k 为接收节点，m_k∈M={RUMOR,DEBUNK} 为消息类型，τ_k 为逻辑时间层级。节点状态转移由受约束 LLM 算子 F_θ 实现：(s_i^{t+1},a_i^t)=F_θ(P_i,s_i^t,M_i^t)，其中 P_i 为人设，M_i^t 为本轮新接收消息集合，a_i^t∈{Share,Ignore,Debunk} 为对外动作。
+P0039	[46]	为保证算法有限性，定义事件访问标记 ν(u,v,m)∈{0,1}。仅当 ν(u,v,m)=0 时，事件 (u,v,m) 才允许进入下一轮队列；入队后立即置 ν(u,v,m)=1。因此，每个三元事件至多传播一次，事件总数满足 N_event≤|E|·|M|。该规则不是一般意义上的工程去重，而是 LEDS 可终止性与复杂度边界的核心算法约束。
+P0040	[46]	同时，设 A_t={v_i: M_i^t≠∅} 为活跃节点集合，LEDS 使用 π(A_t)=sort(A_t,node_id) 生成唯一调度序列。将节点执行顺序显式纳入协议后，在给定事件集合下可消除由并发顺序不确定性引起的额外轨迹分叉。
+P0041	[48]	针对全连接网络带来的计算开销激增问题，本文提出离散事件驱动机制。定义时间步 。在时刻 ，系统不遍历所有节点，而是仅检索在  时刻接收到非空消息集  的节点 。本文将节点的认知过程重构为马尔可夫过程：
+P0042	[48]	
+P0043	[48]	内部信念状态 S 和三元动作 A∈{Share,Ignore,Debunk} 仅由当前输入决定。系统按全局节点 ID 顺序执行该公式，将节点执行顺序显式纳入算法协议，在给定事件集合下构造唯一调度序列，从而消除由并发顺序不确定性引起的额外轨迹分叉。
+P0044	[46]	3.4 零温度贪婪解码约束与可审计性
+P0045	[48]	Temperature=0 是控制显式采样噪声的实验条件，而不是 LEDS 实现可重放性的充分条件。本文研究的是结构化状态转移任务，并不以开放式文本多样性为优化目标；因此，零温度设置的作用是减少显式采样扰动并提高结构化输出合法性。针对“Temperature=0 会不会影响 LLM 效果”的疑问，本文新增受控温度敏感性实验（见 4.2.1 节）：在相同 Prompt 集合、相同人设规则、相同 JSON Schema、相同 Top_P=1.0 和相同 DeepSeek API 后端下，仅改变 Temperature∈{0,0.2,0.5,0.7}。结果显示，各温度下 JSON 合法率均为100%，联合规则一致率稳定在66.81%～67.36%，未观察到 T=0 相比更高温度的规则执行质量下降。但 T=0 条件下仍有6.67%的 Prompt 在三次独立调用中出现不同判定，说明零温度不能被等同为物理级确定性，LEDS 的可重放性仍必须由判定记录映射和轨迹回放机制保证。
+P0046	[48]	LEDS 的记录级可重放性来自判定记录映射。设规范化 Prompt 的哈希为 h=H(p)，判定记录映射为 C:h↦y。首次运行时调用 y=F_θ(p)，并写入 C[h]←y；回放运行时不再调用云端模型，而直接取 y=C[h]。由此，一次不可完全控制的 LLM 调用被转化为可索引、可审计、可复用的状态转移记录。本文后文所称“缓存”均指这一判定记录映射，而非单纯性能优化缓存。
+P0047	[46]	3.5 系统有限状态可终止性分析
+P0048	[48]	LEDS 不是传统随机马尔可夫链。在一次无缓存运行中，云端 LLM 可表现出运行间不确定性；在固定 Prompt/Response 记录的回放运行中，转移结果由记录确定。为排除智能体间无限循环导致的仿真不终止，下面针对协议的事件生成规则给出终止性结论。
+P0049	[48]	命题 1（记录条件下的轨迹唯一性）。在冻结拓扑、人设、初始事件、节点调度顺序、状态解析规则和判定记录映射均固定的条件下，LEDS 生成唯一的状态轨迹。证明思路如下：初始状态与初始事件队列唯一；若第 t 步状态和事件队列唯一，则固定调度序列 π(A_t) 与固定判定记录 C 使每个活跃节点的下一状态唯一，新颖事件过滤规则又使下一事件队列唯一；由数学归纳法可得全程轨迹唯一。
+P0050	[48]	定理 1（有限事件终止性）。设冻结网络包含有限条有向边 E→，消息类型集合 M 有限，且协议对每个三元组（发送节点，接收节点，消息类型）至多入队一次。若不施加 T_max 截断，则事件队列至多处理 |E→||M| 个边消息事件，并在有限步后为空。
+P0051	[46]	3.6 LEDS框架核心算法伪代码
+P0052	[48]	以下是本研究提出的 LEDS 框架在仿真引擎中的主循环实现伪代码。
+P0053	[48]	Algorithm 1: LEDS 可重放事件驱动信息传播算法
+P0054	[48]	Input: 冻结有向图 G=(V,E)；节点人设映射 P；初始源节点 v_src；初始消息 m_init；最大时间步 T_max；受约束 LLM 判定算子 F_θ；判定记录映射 C（首次运行可为空）。
+P0055	[48]	Output: 终止或截断时的全网状态 S_T、最终渗透率 ρ_T、逐步状态机日志 L。
+P0056	[48]	1:  对所有节点 v_i∈V 初始化信念 b_i←Neutral，累计谣言暴露 r_i←0，累计辟谣暴露 d_i←0。
+P0057	[48]	2:  初始化事件访问标记 ν(u,v,m)←0，其中 (u,v)∈E，m∈{RUMOR,DEBUNK}。
+P0058	[48]	3:  初始化活跃事件队列 Q_0[v_src]←{(-1,v_src,m_init)}，日志 L←∅，时间步 t←0。
+P0059	[48]	4:  while Q_t 非空且 t<T_max do
+P0060	[48]	5:      Q_{t+1}←∅，A_t←{v_i | Q_t[v_i] 非空}。
+P0061	[48]	6:      按全局节点编号升序遍历 v_i∈sort(A_t)。
+P0062	[48]	7:      for each v_i in sort(A_t) do
+P0063	[48]	8:          读取本轮新增消息集合 M_i^t←Q_t[v_i]，并更新暴露计数 r_i、d_i。
+P0064	[48]	9:          构造规范化 Prompt p_i^t←ConstructPrompt(P_i,b_i,r_i,d_i,M_i^t)。
+P0065	[48]	10:         计算哈希 h_i^t←H(p_i^t)。
+P0066	[48]	11:         if h_i^t∈C then
+P0067	[48]	12:             y_i^t←C[h_i^t]。  // 记录回放，不再访问云端模型
+P0068	[48]	13:         else
+P0069	[48]	14:             y_i^t←F_θ(p_i^t; Temperature=0, Top_P=1)。
+P0070	[48]	15:             C[h_i^t]←y_i^t。  // 首次判定写入记录映射
+P0071	[48]	16:         end if
+P0072	[48]	17:         解析 y_i^t 得到 (b_i',a_i^t)，其中 b_i'∈{Accept,Reject,Neutral}，a_i^t∈{Share,Ignore,Debunk}。
+P0073	[48]	18:         若解析失败或输出越界，则进行有界重试；重试耗尽时置 a_i^t←Ignore，并保持原信念 b_i 不变。
+P0074	[48]	19:         更新节点信念 b_i←b_i'。
+P0075	[48]	20:         if a_i^t=Share 或 a_i^t=Debunk then
+P0076	[48]	21:             由动作生成类型化消息 m_out：Share→RUMOR，Debunk→DEBUNK。
+P0077	[48]	22:             for each 出邻居 v_j∈N^+(v_i) do
+P0078	[48]	23:                 if ν(v_i,v_j,m_out)=0 then
+P0079	[48]	24:                     将事件 (v_i,v_j,m_out) 加入 Q_{t+1}[v_j]。
+P0080	[48]	25:                     ν(v_i,v_j,m_out)←1。
+P0081	[48]	26:                 end if
+P0082	[48]	27:             end for
+P0083	[48]	28:         end if
+P0084	[48]	29:         将 (t,v_i,P_i,M_i^t,b_i,a_i^t,h_i^t) 追加至日志 L。
+P0085	[48]	30:     end for
+P0086	[48]	31:     t←t+1。
+P0087	[48]	32:  end while
+P0088	[48]	33:  计算最终渗透率 ρ_T←|{v_i∈V | b_i=Accept}| / |V|。
+P0089	[48]	34:  return S_T={b_i | v_i∈V}, ρ_T, L。
+P0090	[48]	说明：第 6 行固定节点调度顺序以排除并发顺序引起的轨迹分叉；第 11-16 行对应判定记录映射，保证记录条件下的逐事件回放一致；第 23-25 行是新颖事件过滤规则，使每个“发送节点-接收节点-消息类型”三元事件至多传播一次。
+P0091	[48]	复杂度：在事件队列完全耗散且不考虑 T_max 截断时，消息入队次数上界为 |E|·|M|，其中 |M|=2；LLM 判定次数不超过被非空事件队列激活的节点-时间对数量，显著低于全轮询的 |V|·T_max 上界。
+P0092	[43]	4 实验分析与验证
+P0093	[48]	本章围绕一个补充敏感性检验和两个主体实验板块展开。首先，4.2.1 节以固定 Prompt 池直接检验 Temperature=0 是否削弱结构化状态转移判定质量，以回应零温度设置可能影响 LLM 效果的疑问。随后，板块一：可复现性评估（4.3 至 4.5 节）直接检验本文的核心命题，即可复现性须由协议在实验层面保证：实验一（成本与方差基线，4.3 节）量化 LEDS 相对蒙特卡洛方案的方差与效率优势，实验二（零温度运行间非确定性与判定记录回放一致性探针，4.4 节）给出“零温度不等于逐轨迹确定复现、判定记录回放才能精确复现”的直接证据，实验三（跨 LLM 后端鲁棒性，4.5 节）检验该命题不依赖单一模型。板块二：应用验证（4.6 至 4.8 节）在可复现协议之上评估真实治理问题，并以事实核查员空间部署作为应用案例。
+P0094	[46]	4.1 实验环境与参数设置
+P0095	[48]	判别内核  通过兼容 OpenAI/DeepSeek 规范的云端 API 调用。本文全部实证数据均由真实 deepseek-chat（、Top_P = 1.0）在  主规模上产生；静态图以固定种子一次性固化，运行期不使用任何伪随机数，并采用 Prompt/Response 缓存重放。三类基线分别为：传统无语义的 Independent Cascade（固定概率转移）、Full Polling（保留 JSON 结构化输出但每步轮询全部节点，以隔离事件驱动机制的贡献）和 Monte Carlo（ 重复采样求均值，以比较方差与评估开销）。
+P0096	[46]	4.2 传播场景与节点人设配置
+P0097	[48]	设定传播信息为虚拟科学预警（如“长期佩戴新型AR眼镜会导致隐性记忆丧失”）。全网包含三种人设：易感者 (Susceptible, 60%)、中立者 (Neutral, 30%) 与具备科学素养的核查员 (Fact Checker, 10%)。所有节点属性在仿真启动前通过 JSON 配置文件物理固化。为保证实验可复现，完整的 System Prompt、User Prompt 模板、输出 JSON Schema、信念/动作枚举集及三类人设的 Persona Profiles 见附录 A。
+P0098	[]	4.2.1 补充实验：Temperature敏感性与结构化判定质量
+P0099	[]	为直接回应“Temperature=0 会不会影响 LLM 效果”的问题，本文在完整网络仿真之外构造受控 Prompt 级温度消融实验。实验固定 System Prompt、User Prompt 模板、三类人设规则、输出 JSON Schema、Top_P=1.0、解析规则和模型后端，仅改变 Temperature。Prompt 池共240条，按易感者、中立者和核查员三类人设各80条分层构造，覆盖当前信念状态、谣言来源数、辟谣来源数和新增消息类型等主要状态转移边界。每个 Prompt 在 Temperature∈{0,0.2,0.5,0.7} 下独立调用3次，共获得2880条真实 DeepSeek API 输出。规则参照由附录A中的三类人设状态转移规则生成，评价指标包括联合规则一致率、stance一致率、action一致率、JSON合法率和同一Prompt三次重复的输出不一致率。
+P0100	[]	补充表1给出总体温度消融结果。四个温度下 JSON 合法率均为100%，说明在本文的受约束状态转移任务中，结构化输出约束能够稳定发挥作用。联合规则一致率分别为67.22%、67.36%、66.81%和67.08%，点估计差异小于0.6个百分点；以T=0为基准的差值置信区间分别为T=0.2的[-4.71,4.99]、T=0.5的[-5.27,4.44]和T=0.7的[-4.99,4.71]个百分点。由于置信区间下界未完全落在-3个百分点非劣效界限之上，本文不作严格非劣效断言；但描述性结果未显示T=0相对于更高温度存在规则执行质量下降。
+TABLE 1
+T01R001	Temperature	N	联合规则一致率	95% Wilson CI	Stance一致率	Action一致率	JSON合法率	Prompt不一致率
+T01R002	0.0	720	67.22%	[63.71, 70.55]	73.89%	81.81%	100.00%	6.67%
+T01R003	0.2	720	67.36%	[63.85, 70.69]	74.03%	81.81%	100.00%	6.25%
+T01R004	0.5	720	66.81%	[63.28, 70.15]	73.19%	81.25%	100.00%	7.08%
+T01R005	0.7	720	67.08%	[63.57, 70.42]	73.61%	81.53%	100.00%	7.50%
+END TABLE 1
+P0101	[]	补充表1 Temperature敏感性实验总体结果（DeepSeek-v4-flash，240个Prompt×4个温度×3次重复）。注：联合规则一致率要求stance和action均与规则参照一致；Prompt不一致率表示同一温度下同一Prompt三次调用中至少出现两种不同结构化输出的比例。
+P0102	[]	分人设结果进一步表明，核查员人设在四个温度下 stance 一致率均为100%，联合规则一致率约80%；易感者和中立者的联合规则一致率约60%～62%。主要错误模式并非随机格式错误，而是语义判定偏保守：模型常将 Neutral/Ignore 判为 Reject/Ignore，或将 Accept/Share 判为 Reject/Ignore，也会把部分 Reject/Ignore 升级为 Reject/Debunk。这说明 LLM 不是规则 oracle 的无偏替代品，尤其在健康风险谣言场景中会呈现反谣言方向的保守化倾向。LEDS 的意义正在于把这种偏差通过结构化输出、判定记录和回放机制显性化、可度量化，而不是假设 LLM 自身完全确定或完全无偏。
+TABLE 2
+T02R001	Temperature	Fact Checker	Neutral	Susceptible
+T02R002	0.0	80.00%	61.67%	60.00%
+T02R003	0.2	80.00%	62.08%	60.00%
+T02R004	0.5	80.83%	60.00%	59.58%
+T02R005	0.7	80.42%	61.25%	59.58%
+END TABLE 2
+P0103	[]	补充表2 分人设联合规则一致率。注：每个温度下每类人设N=240。
+P0104	[]	该补充实验对本文结论形成两点修正。第一，对于本文的结构化状态转移任务，未观察到T=0相较T=0.2、0.5和0.7造成判定质量劣化；因此，主实验使用T=0作为控制显式采样噪声的条件是合理的。第二，T=0并不意味着云端 LLM 输出完全确定：在240个Prompt中仍有16个在三次独立调用中出现不同结构化判定，不一致率为6.67%。因此，LEDS 的可复现性不能建立在“零温度即确定”的假设上，而必须建立在固定判定记录、确定顺序调度、新颖事件过滤和轨迹回放之上。
+P0105	[46]	4.3 实验一：API成本与方差基线对比
+P0106	[48]	实验一在同一冻结的无标度网络（N=300）上，以真实 deepseek-chat 比较四种仿真范式的开销与稳定性：LEDS（事件驱动，Temperature=0）、Full Polling（保留 JSON 结构化输出但移除事件过滤、每步轮询全部节点，Temperature=0）、Monte Carlo（事件驱动，Temperature=0.7，重复 5 次并计 95% 置信区间）与传统 Independent Cascade（无语义、纯概率转移，重复 100 次）。需要说明的是，Monte Carlo 条件用于呈现较高温度采样下的方差与结构化输出风险，并非严格的温度消融；严格消融应在完全相同调度、相同 Prompt 集合和相同评价集上仅改变 Temperature。
+P0107	[51]	表1 LEDS与基线框架的实测性能对比（真实deepseek-chat，无标度网络）
+P0108	[51]	Table 1 Measured performance of LEDS and baseline frameworks
+TABLE 3
+T03R001	仿真框架模型	f_LLM 评估次数	墙钟耗时 (s)	最终渗透率 (均值±95%CI)	无效 JSON 率	可复现性
+T03R002	LEDS (Temp=0.0, 事件驱动, 本文)	701	884	27.0%（缓存重放可精确复现）	0%	高（缓存重放）
+T03R003	Full Polling LLM (Temp=0.0, 全轮询)	2,400	471	7.3%	0%	低
+T03R004	Monte Carlo (Temp=0.7, 5 轮)	3,993	7,012	17.2% ± 4.6%	0.1%	极低
+T03R005	Independent Cascade (传统, p=0.1)	0	N/A	0.7% ± 0.2%	N/A	N/A（无语义）
+END TABLE 3
+P0109	[48]	表 1 揭示了五方面结果。
+P0110	[48]	（1）可复现性与方差。 蒙特卡洛（）5 次采样的渗透率为 （样本跨度 8.0%～21.0%），单次运行的宏观结论并不可靠。4.4 节进一步用 K=5 零温度独立运行表明，即使宏观渗透率在 deepseek-v4-flash 后端下较为接近，5次 final state hash 仍全部不同，成对 Hamming 距离均大于0；因此 LEDS 的可复现性由判定记录回放在实验层面保证，而非依赖重复运行的自然一致（见 3.4 节）。
+P0111	[48]	（2）评估次数与真实成本的关系。 事件驱动将  评估次数从全轮询的 2,400 次降至 701 次（约 1/3.4）。但评估次数的削减未必等比转化为成本或耗时：空闲节点的相同 Prompt 大多命中响应缓存，故全轮询的墙钟耗时（471 s）反而低于 LEDS（884 s）。评估次数削减是架构级指标，仅当每节点 Prompt 携带不可缓存的历史上下文（如自由对话式仿真）时，才转化为真实的 token 与耗时优势；不同规模下的削减比与该指标的边界详见附录 C。
+P0112	[48]	（3）事件驱动对传播动力学的影响。 全轮询的最终渗透率（7.3%）远低于事件驱动（27.0%）：反复轮询使空闲节点被反复重判并逐步漂向 Reject。这表明全轮询并非“结果相同、开销更省”的等价替代，而是刻画了不同的传播过程；事件驱动对于忠实还原传播动力学是必要的，而不仅是性能优化。
+P0113	[48]	（4）传统模型基线的解释边界。Independent Cascade（p=0.1）的渗透率为 0.7%±0.2%。该基线用于展示不含自然语言判别与辟谣动作的经典扩散过程，与 LEDS 的状态空间和转移机制并不等价；由于 p=0.1 未由真实传播数据校准，其绝对渗透率不能作为 LEDS 经验效度更高或传统模型必然低估传播的证据。
+P0114	[48]	（5）结构化输出的鲁棒性。  下 LEDS 与 Full Polling 的无效 JSON 率均为 0%； 的 Monte Carlo 无效率为 0.1%（3,993 次判定中 4 次越界，如将 Ignore 截断为 Ignor），且全部经一次重采样恢复、无一触发兜底回退，量化了零温度与结构化约束对输出合法性的收益。
+P0115	[46]	4.4 实验二：零温度运行间非确定性与判定记录回放一致性探针
+P0116	[48]	实验二旨在为 3.4 节的核心论断（云端 LLM 即便在 Temperature=0 下也不能保证逐事件确定复现，可复现性须由判定记录回放在实验层面保证）提供直接证据。按照 min_accept.md 的修订要求，本文将零温度无共享判定记录的独立运行由3次扩展为5次。考虑到原稿 K=3 实验使用 deepseek-chat，而当前公共 API 支持的正式后端为 deepseek-v4-flash，修订实验不将两组结果混合统计，而是在同一后端、同一冻结无标度网络、同一源节点、人设映射、Prompt模板、JSON Schema、Temperature=0 和 Top_P=1.0 条件下重新完成 K=5 独立运行。每次运行均从全新空判定记录开始，禁止共享此前运行的 Prompt/Response 映射；随后选择一条完整 seed 运行生成判定记录，并在不访问云端模型的条件下连续 replay 3 次。发散在两个层面刻画：宏观为最终渗透率的样本散布，微观为任意两次运行最终信念状态向量的成对 Hamming 距离；回放一致性进一步以云端调用增量、final state hash 和 trace hash 共同验证。
+P0117	[51]	
+P0118	[51]	图2 零温度运行间非确定性与判定记录回放一致性。注：（a）K=5独立运行的宏观渗透率分布；（b）逐节点Hamming距离与判定记录回放精确复现
+P0119	[51]	Fig. 2 Run-to-run nondeterminism and decision-record replay consistency
+P0120	[51]	表2 零温度运行间非确定性与判定记录回放一致性（真实deepseek-v4-flash，同一冻结无标度网络）
+P0121	[51]	Table 2 Run-to-run nondeterminism and decision-record replay consistency
+TABLE 4
+T04R001	度量	结果
+T04R002	5 次独立运行渗透率样本	56.000% / 56.333% / 55.667% / 56.000% / 55.667%
+T04R003	渗透率均值、样本标准差、Student-t 95% CI	55.933%，0.279%，[55.587%, 56.280%]
+T04R004	稳态步数样本；渗透率极差	8 / 9 / 9 / 8 / 8；0.667 个百分点
+T04R005	成对 Hamming 距离摘要（详见补充表 S2）	0.667%～1.667%
+T04R006	Hamming 均值、样本标准差、95% CI	1.400%，0.344%，[1.154%，1.646%]
+T04R007	判定记录回放：seed 渗透率 -> replay 渗透率	56.667% -> 56.667% / 56.667% / 56.667%
+T04R008	判定记录回放：云端调用增量；Hamming；hash一致率	0 / 0 / 0；0.0% / 0.0% / 0.0%；final state hash 与 trace hash 均为100%
+END TABLE 4
+P0122	[48]	表 2 与图2 给出三点结论。第一，K=5 下最终渗透率区间较窄，5次独立运行的渗透率为56.000%、56.333%、55.667%、56.000%和55.667%，均值为55.933%，样本标准差为0.279%，Student-t 95% CI为[55.587%,56.280%]，极差为0.667个百分点，说明在本后端与本结构化任务中零温度能够压低宏观波动。第二，宏观指标接近不等价于逐节点轨迹一致：5次运行的final state hash均不相同，10组成对Hamming距离的完整明细已移入补充表S2，其范围为0.667%～1.667%，均值为1.400%，Student-t 95% CI为[1.154%,1.646%]。第三，固定seed判定记录后，3次replay均未产生新增云端API调用，渗透率均为56.667%，稳态步数均为8，逐节点Hamming距离均为0，final state hash和trace hash均与seed完全一致，exact match为3/3。由此可见，Temperature=0只是控制显式采样扰动的实验条件，LEDS的记录级可重放性来自判定记录映射、确定顺序调度、新颖事件过滤和轨迹回放。
+P0123	[46]	4.5 实验三：跨LLM后端鲁棒性
+P0124	[48]	实验三检验可复现性命题与后续应用结论是否为单一模型 deepseek-chat 的特例。在完全相同的四组冻结配置（两类拓扑 × 两类干预部署，即 4.6 节的合成网络应用配置）上，改用第二后端 deepseek-reasoner（）重跑，并与 deepseek-chat 逐组对照。
+P0125	[51]	
+P0126	[51]	图3 两个LLM后端上的单次渗透率对照。注：蓝柱为deepseek-chat，橙柱为deepseek-reasoner；中心部署均压制至近零，其余绝对数值与拓扑排序不作稳健结论
+P0127	[51]	Fig. 3 Single-run penetration rates on two LLM backends
+P0128	[51]	表3 主实验在两个LLM后端上的对照（最终渗透率/稳态步数）
+P0129	[51]	Table 3 Comparison of the main experiment on two LLM backends
+TABLE 5
+T05R001	实验场景	deepseek-chat（单次）	deepseek-reasoner（单次）	Hub 抑制是否复现
+T05R002	小世界（随机核查员）	17.0% / 30 步（截断）	28.7% / 30 步（截断）	不适用
+T05R003	无标度（随机核查员）	31.7% / 9 步	56.3% / 8 步	不适用
+T05R004	边缘部署（低度数核查员）	30.0% / 10 步	65.7% / 9 步	不适用
+T05R005	中心部署（Top Hub 核查员）	0.0% / 7 步	0.3% / 7 步	是
+END TABLE 5
+P0130	[48]	两后端在全部四组上无效 JSON 率与兜底回退率均为 0%。本表为每后端单次运行值；结合 4.6 节的多次运行分析，仅 Hub 抑制与结构化输出鲁棒性作跨后端稳健结论，其余绝对数值与排序须计入运行间波动。
+P0131	[48]	本实验检验协议层面的两项性质是否为单一模型特例。如表 3 与图3 所示，两项性质跨后端稳健复现：中心（Hub）部署在两个后端上都将渗透率压制至近零（0.0% 与 0.3%，收敛步数同为 7 步），本文最可靠的干预结论不依赖具体模型；结构化输出约束在推理模型上同样零违规（无效 JSON 率 0%），说明零温度与 Schema 约束可跨厂商内核移植。推理内核下绝对渗透率整体抬升属正常的模型间差异；由于本表为单次运行，拓扑与”边缘 vs 随机”排序（已由 4.6 节以  判定为噪声内不可判定）在此不作跨后端方向性断言。
+P0132	[46]	4.6 实验四：合成网络上的传播机制与空间干预
+P0133	[48]	在可复现协议之上，实验四以合成拓扑评估两个应用问题：拓扑对语义传播的影响，以及事实核查员部署位置对干预效能的边际作用。所有配置于同一普通源节点（节点 47）注入相同初始谣言，仅改变受控变量（拓扑或核查员部署），人设映射与解码参数一致。鉴于 4.4 节已证实云端 LLM 在 Temperature=0 下仍存在运行间轨迹差异，本节的应用结论一律以每条件 5 次独立运行的均值 ± 95% 置信区间（CI）为准（每次运行均采用独立缓存），单次运行值仅作时序曲线（图4、图5）的示例。这一做法本身也是本文核心命题的直接体现：脱离重复运行与区间估计的单次宏观结论不足为凭。
+P0134	[51]	
+P0135	[51]	图4 合成网络上的拓扑传播时序（单次运行示例）。注：仅作时序展示，定量结论以表4的区间估计为准
+P0136	[51]	Fig. 4 Diffusion trajectories on synthetic network topologies (single-run examples)
+P0137	[51]	
+P0138	[51]	图5 合成网络上的空间干预时序（单次运行示例）。注：仅作时序展示，定量结论以表4的区间估计为准
+P0139	[51]	Fig. 5 Spatial-intervention trajectories on synthetic networks (single-run examples)
+P0140	[51]	表4 合成网络上的拓扑与干预效能（真实deepseek-chat，每条件5次独立运行）
+P0141	[51]	Table 4 Topology and intervention effectiveness on synthetic networks
+TABLE 6
+T06R001	配置	网络 / 核查员部署	渗透率均值 ± 95%CI	5 次样本极差	稳态步数
+T06R002	拓扑 A	无标度 BA(m=2) / 随机	13.1% ± 2.2%	6.3 pp	9
+T06R003	拓扑 B	小世界 WS(k=4,p=0.1) / 随机	17.3% ± 0.5%（T_max=30 截断）	1.3 pp	30
+T06R004	干预-边缘	无标度 BA / 低度数节点	25.1% ± 4.7%	14.3 pp	10–11
+T06R005	干预-中心	无标度 BA / Top-30 Hub	0.0% ± 0.0%	0.0 pp	7
+END TABLE 6
+P0142	[48]	（1）拓扑效应：现有证据不足以支持稳定的渗透率排序。 在每种条件独立运行 K=5 次的情况下，无标度网络与小世界网络的平均渗透率分别为 13.1%±2.2% 和 17.3%±0.5%。两组结果的置信区间较为接近，且渗透率关系与早期单次实验观察并不一致；其中，无标度网络的运行间极差达到6.3个百分点，表明该条件下存在较为明显的运行间波动。考虑到云端LLM的运行间不确定性可能掩盖或放大中等强度的拓扑差异，基于单次运行进行拓扑排序容易产生不稳健结论。现阶段可以支持的审慎结论是：两类网络均能够形成语义级信息传播，其平均渗透率总体处于同一数量级，约为10%～20%；若要识别更细粒度的拓扑差异，仍需扩大独立重复次数并开展相应的统计显著性与效应量分析。
+P0143	[48]	（2）空间干预：在当前合成场景下，只有中心（Hub）部署呈现稳定抑制。三种部署中，中心部署的 5 次运行均得到 0.0% 渗透率，说明该效应相对于本组观测到的运行间波动较强。相比之下，边缘部署（25.1% ± 4.7%）与随机基准（13.1% ± 2.2%）的区间较宽，当前 K=5 的证据不足以支持二者的方向性排序。因此，本文将应用结论限定为：在给定合成网络、固定人设与传播文本下，中心部署表现出稳定的强抑制；其向其他网络、文本和人群设定的推广仍需独立检验。表 5 的真实网络结果仅提供探索性迁移观察。
+P0144	[46]	4.7 实验五：真实社交网络上的干预效能与外部效度
+P0145	[48]	4.6 节在合成拓扑上给出了干预机制的归因。为检验结论是否依赖合成结构，实验五将同一干预协议迁移到真实社交网络：取 SNAP Facebook ego-network，重标为  个连续节点、双向边 5,704 条，平均度约 17；沿用 60%/30%/10% 的人设比例与同一普通源节点，仅改变 10% 核查员的空间部署（随机 / 边缘低度数 / 中心 Hub），以真实 deepseek-chat（）运行。
+P0146	[51]	
+P0147	[51]	图6 真实Facebook网络三种部署的最终渗透率对比（单次运行）。注：随机部署0.0%、边缘部署9.9%、中心部署0.0%
+P0148	[51]	Fig. 6 Final penetration rates under three deployments on the Facebook network (single run)
+P0149	[51]	表5 合成BA网络与真实Facebook网络上的干预效能对照（真实deepseek-chat）
+P0150	[51]	Table 5 Intervention effectiveness on synthetic BA and real Facebook networks
+TABLE 7
+T07R001	部署策略	合成 BA（N=300）	真实 Facebook（N=334）
+T07R002	随机部署	31.7%	0.0%
+T07R003	边缘部署（低度数）	30.0%	9.9%
+T07R004	中心部署（Hub）	0.0%	0.0%
+END TABLE 7
+P0151	[48]	说明：真实网络三组无效 JSON 率均为 0%，与合成网络一致。
+P0152	[48]	表5报告的是 Facebook 真实网络上的单次运行结果。鉴于第4.6节在合成网络中通过每个条件 K=5 次独立运行已揭示出较为显著的运行间波动，对该组结果应采取审慎解释。当前证据主要支持一项相对稳健的发现：中心节点（Hub）部署在合成网络的重复实验中将渗透率稳定压制至 0.0%，并在真实 Facebook 网络的单次运行中同样获得0.0% 的结果。由此可见，Hub 部署的强抑制效应不仅在合成网络的重复实验中得到验证，也在真实网络实例中获得了方向一致的探索性支持，构成本文应用分析中证据最为充分的结论。相较之下，真实网络中随机部署的0.0% 与边缘部署的 9.9% 均为单次观测，不宜据此推断两种策略之间存在稳定的性能差异。第4.6节已表明，在合成网络 K=5的条件下，边缘部署与随机部署的差异仍处于运行间波动范围之内，尚不足以确定其优劣排序；因此，真实网络中的 9.9% 与 0.0% 之差同样可能受到运行间不确定性的显著影响。综合而言，现有结果表明，Hub 部署的强抑制方向在由合成网络迁移至真实稠密社交网络后未出现反向证据，而非 Hub 部署策略之间的细粒度差异仍需通过逐条件多次独立运行加以检验。需要强调的是，该结论目前仅建立在单个 Facebook ego-network 和合成谣言场景之上，其外部效度仍有待通过更多真实网络、真实传播数据校准及重复实验进一步验证。
+P0153	[46]	4.8 实验六：可审计的信念翻转链走查
+P0154	[48]	LEDS 的完整轨迹日志（3.1 节 Stage 3）支持对任意节点的信念演化做零成本、逐消息的事后审计。作为示例，我们从边缘部署实验的完整轨迹记录中抽取节点 3（易感者）的信念生命周期，展示协议如何把一次宏观渗透率变化归因到具体的消息事件。
+P0155	[51]	表6 节点3（易感者）的可审计信念翻转链
+P0156	[51]	Table 6 Auditable belief-flip chain of node 3 (susceptible)
+TABLE 8
+T08R001	时间步	收到的关键消息（类型, 发送者）	信念转移	动作
+T08R002	t=2	谣言（RUMOR, 源节点 47）	Neutral → Accept	Share
+T08R003	t=4	多条谣言 + 核查员辟谣（DEBUNK, 20/102/118）	Accept → Reject	Ignore
+T08R004	t=5,8,9	后续辟谣（DEBUNK, 66/2/167/237）	Reject → Reject（稳定）	Ignore
+END TABLE 8
+P0157	[48]	表 6 呈现了一条可完整追溯的因果链：节点 3 在  因收到源节点的谣言由存疑转为接受并转发；在  同时收到多条谣言与三名核查员的辟谣后被纠偏为拒绝，并停止传播；此后持续收到辟谣、信念稳定于拒绝。每一步的信念转移都能指向触发它的具体消息，且该轨迹在判定记录回放下逐字段精确复现（4.4 节 replay Hamming=0，final state hash 与 trace hash 均一致）。这种“可解释到单次消息事件、且可精确重放”的审计能力，是自由生成式仿真难以提供的：K=5独立运行虽表现出较小宏观波动，但5次final state hash均不同、成对Hamming距离最高为1.667%，说明脱离判定记录的云端重复调用不能保证逐节点轨迹一致。
+P0158	[43]	5 结论
+P0159	[48]	本文提出面向社会信息传播的可重放事件驱动仿真协议 LEDS。围绕专家关切的 Temperature 设置问题，补充实验表明，在受约束的结构化状态转移任务中，T=0、0.2、0.5、0.7 四个条件下 DeepSeek API 输出的 JSON 合法率均为100%，联合规则一致率分别为67.22%、67.36%、66.81%和67.08%，未观察到零温度导致任务判定质量下降；但即使在 T=0 条件下，仍有6.67%的 Prompt 在三次独立调用中产生不同判定。进一步的K=5修订实验表明，零温度可以使宏观渗透率波动较小，但不能保证逐节点轨迹一致：5次独立运行的渗透率极差为0.667个百分点，最终状态哈希均不同，节点状态Hamming距离最高为1.667%；而固定判定记录后的3次回放实现云端零调用、Hamming为0、final state hash和trace hash完全一致。因此，本文的核心结论不是“零温度能够保证确定性”，而是LLM社会仿真的可信性应同时报告记录级可重放性、运行级统计可复现性与经验有效性。事件驱动机制将判定次数由2,400次降至701次，并在不同规模下实现2.5～4.8倍的评估次数削减。
+P0160	[48]	当前研究仍存在一定局限：（i）合成网络每个条件仅重复5次，真实网络尚未开展重复实验；（ii）模型后端仅覆盖 DeepSeek 同族模型，跨厂商与本地开源模型的适用性有待验证；（iii）最大实测规模为1,000个节点；（iv）真实网络仅涉及单个 Facebook ego-network，且人设、传播文本与行为规则尚未通过真实传播数据校准。后续研究将进一步扩大重复次数与网络规模，开展跨模型、跨平台和多真实网络验证，并结合真实传播轨迹与人类行为数据进行参数校准，从而系统提升 LEDS 的统计稳健性、可扩展性与经验效度。
+P0161	[43]	伦理声明
+P0162	[43]	数据与代码可获得性声明：本文实验脚本、冻结配置、结果汇总、状态机日志、图表和判定记录缓存均随稿件材料保存。为避免真实 API 密钥泄露，提交材料不包含 .env 私密文件；响应缓存发布前需按期刊与伦理要求进行脱敏处理。
+P0163	[48]	本研究所用的传播内容（“长期佩戴新型 AR 眼镜会导致短期隐性记忆丧失”及其配套辟谣声明，见附录A的S2）均为为实验目的虚构的合成信息，不指向任何真实产品、机构或个人，亦未在任何真实社交平台发布或传播。全部智能体、网络拓扑与人设均为程序生成的合成对象，实验不涉及真实人类被试、个人数据或受保护群体。本文对错误信息传播与干预的研究目的在于评估信息治理策略（如事实核查员的空间部署），其结论用于支持而非削弱对虚假信息的防御；我们不提供任何可用于放大真实错误信息传播的资料。
+P0164	[43]	参考文献
+P0165	[44]	1 CENTOLA D. The spread of behavior in an online social network experiment[J]. Science, 2010, 329(5996): 1194-1197.
+P0166	[44]	2 ZHAO W X, ZHOU K, LI J, et al. A survey of large language models[EB/OL]. arXiv:2303.18223, 2023[2026-07-25]. https://arxiv.org/abs/2303.18223.
+P0167	[44]	3 WEI J, WANG X, SCHUURMANS D, et al. Chain-of-thought prompting elicits reasoning in large language models[C]//Advances in Neural Information Processing Systems: Vol 35. 2022: 24824-24837.
+P0168	[44]	4 XI Z, CHEN W, GUO X, et al. The rise and potential of large language model based agents: a survey[EB/OL]. arXiv:2309.07864, 2023[2026-07-25]. https://arxiv.org/abs/2309.07864.
+P0169	[44]	5 PARK J S, O’BRIEN J C, CAI C J, et al. Generative agents: interactive simulacra of human behavior[C]//Proceedings of the 36th Annual ACM Symposium on User Interface Software and Technology. New York: ACM, 2023: 1-22.
+P0170	[44]	6 GAO C, LAN X, LI N, et al. Large language models empowered agent-based modeling and simulation: a survey and perspectives[J]. Humanities and Social Sciences Communications, 2024, 11(1): 1259. DOI:10.1057/s41599-024-03611-3.
+P0171	[44]	7 CHUANG Y S, GOYAL A, HARLALKA N, et al. Simulating opinion dynamics with networks of LLM-based agents[C]//Findings of the Association for Computational Linguistics: NAACL 2024. Stroudsburg: Association for Computational Linguistics, 2024: 3326-3346. DOI:10.18653/v1/2024.findings-naacl.211.
+P0172	[44]	8 HU T, COLLIER N. Quantifying the persona effect in LLM simulations[C]//Proceedings of the 62nd Annual Meeting of the Association for Computational Linguistics. Stroudsburg: Association for Computational Linguistics, 2024: 10289-10307. DOI:10.18653/v1/2024.acl-long.554.
+P0173	[44]	9 QU Y, WANG J. Performance and biases of large language models in public opinion simulation[J]. Humanities and Social Sciences Communications, 2024, 11(1): 1096. DOI:10.1057/s41599-024-03609-x.
+P0174	[44]	10 ZHANG L, HU Y, LI W, et al. LLM-AIDSim: LLM-enhanced agent-based influence diffusion simulation in social networks[J]. Systems, 2025, 13(1): 29. DOI:10.3390/systems13010029.
+P0175	[44]	11 LAROOIJ M, TÖRNBERG P. Validation is the central challenge for generative social simulation: a critical review of LLMs in agent-based modeling[J]. Artificial Intelligence Review, 2025, 59(1). DOI:10.1007/s10462-025-11412-6.
+P0176	[44]	12 WATTS D J, STROGATZ S H. Collective dynamics of ‘small-world’ networks[J]. Nature, 1998, 393(6684): 440-442.
+P0177	[44]	13 BARABÁSI A L, ALBERT R. Emergence of scaling in random networks[J]. Science, 1999, 286(5439): 509-512.
+P0178	[44]	14 VOSOUGHI S, ROY D, ARAL S. The spread of true and false news online[J]. Science, 2018, 359(6380): 1146-1151.
+P0179	[44]	15 KEMPE D, KLEINBERG J, TARDOS É. Maximizing the spread of influence through a social network[C]//Proceedings of the Ninth ACM SIGKDD International Conference on Knowledge Discovery and Data Mining. New York: ACM, 2003: 137-146.
+P0180	[44]	16 ZHAO W X, ZHOU K, LI J, et al. A survey of large language models[J]. Frontiers of Computer Science, 2026, 20(12). DOI:10.1007/s11704-026-60308-3.
+P0181	[44]	17 OUYANG L, WU J, JIANG X, et al. Training language models to follow instructions with human feedback[C]//Advances in Neural Information Processing Systems: Vol 35. 2022: 27730-27744.
+P0182	[43]	附录A 复现材料（Prompt模板、JSON Schema与人设定义）
+P0183	[48]	本附录收录判别内核的完整输入输出契约，内容与实验实现保持一致，供审稿人与复现者逐项核对。
+P0184	[46]	A.1 离散信念状态与动作枚举
+P0185	[48]	系统将节点认知严格限制在有界离散集合内（对应正文 3.5 节状态空间有界性）：
+P0186	[48]	• 信念状态 (stance)： （相信 / 不信 / 存疑）
+P0187	[48]	• 对外动作 (action)： （转发谣言 / 不传播 / 发送辟谣，仅核查员可用）
+P0188	[48]	• 消息类型 (message type)：
+P0189	[48]	任何越出上述枚举集的输出都会在解析层被判为非法并触发校验失败（对应正文 3.1 节 Stage 2 的强制 JSON 输出判定）。
+P0190	[46]	A.2 传播内容
+P0191	[48]	• 谣言 (RUMOR_CONTENT)： “最新研究声称：长期佩戴新型AR眼镜会导致短期隐性记忆丧失。”
+P0192	[48]	• 辟谣 (DEBUNK_CONTENT)： “事实核查声明：经权威机构核实，‘长期佩戴新型AR眼镜导致短期隐性记忆丧失’的说法缺乏任何科学依据，属于虚假信息，请勿传播。”
+P0193	[46]	A.3 System Prompt
+P0194	[48]	你是一个严格的逻辑状态机，扮演社会网络中的一个信息接收节点。你必须根据给定的 / 人设、当前信念状态和新收到的消息，输出你的下一信念状态与动作。严格仅输出如下 / JSON 格式，不要输出其他任何字符（包括解释、Markdown 代码块标记）： / {"stance": "Accept|Reject|Neutral", "action": "Share|Ignore|Debunk"} / 字段语义：stance 表示你对“AR眼镜致失忆”预警的信念（Accept=相信 / Reject=不信 / / Neutral=存疑）；action 表示你本轮的对外动作（Share=向邻居转发该预警 / Ignore=不作 / 任何传播 / Debunk=向邻居发送辟谣声明，仅核查员可用）。
+P0195	[46]	A.4 User Prompt模板
+P0196	[48]	【你的人设】{人设标签}：{人设 Profile 全文（见 S6）} / 【你的当前信念状态 S_t】{Accept|Reject|Neutral} / 【累计信息曝光】你至今累计从 {rumor_count} 个不同邻居收到该风险预警；累计从 / {debunk_count} 个不同邻居收到辟谣声明。 / 【本时间步新收到的消息 M_t】 / - 来自邻居节点 {sender} 的{风险预警(谣言)|权威辟谣声明}：{消息内容} / （... 每条新消息一行 ...） / 请依据人设逻辑输出你的下一信念状态与动作（严格 JSON）。
+P0197	[48]	其中 rumor_count / debunk_count 为该节点累计收到该类消息的不同邻居数（作为内部信念状态  的定量分量，支撑中立者的“多重信息源交叉验证”判定）。
+P0198	[46]	A.5 输出JSON Schema
+P0199	[48]	真实 API 调用时通过 response_format={"type": "json_object"} 施加，并在解析层用下述 schema 二次校验：
+P0200	[48]	{ /   "type": "object", /   "properties": { /     "stance": { "type": "string", "enum": ["Accept", "Reject", "Neutral"] }, /     "action": { "type": "string", "enum": ["Share", "Ignore", "Debunk"] } /   }, /   "required": ["stance", "action"], /   "additionalProperties": false / }
+P0201	[46]	A.6 三类人设Persona Profiles
+TABLE 9
+T09R001	人设	占比	Profile（注入 Prompt 的完整人设描述）
+T09R002	易感者 (Susceptible)	60%	你缺乏技术背景，对新技术潜在健康风险高度焦虑，倾向于相信并转发任何风险预警信息以提醒亲友；但若收到过权威辟谣声明，你会立刻放弃相信并停止传播。
+T09R003	中立者 (Neutral)	30%	你理性谨慎，不轻信单一信息源。只有当至少四个不同的邻居分别向你传来同一风险预警（多重信息源交叉验证）时，你才会相信并转发；一旦收到权威辟谣声明，你会直接判定该预警为谣言。
+T09R004	核查员 (Fact-Checker)	10%	你具备专业科学素养，能立刻识别出该预警是无科学依据的谣言。你绝不传播谣言（stance 恒为 Reject），并且在收到谣言后必须向所有邻居发送辟谣声明（action 输出 Debunk）。
+END TABLE 9
+P0202	[46]	A.7 mock规则内核与真实LLM的对应关系
+P0203	[48]	在未配置 API Key 时，src/stage2_engine.py 的 _mock_decide 以纯 if/else 规则复现上述三类人设的判定逻辑：易感者收到谣言即 Accept/Share、收到辟谣即纠偏；中立者需 ≥4 个不同邻居的谣言才转变；核查员恒 Reject 且收到谣言即 Debunk。其输入输出签名与真实 LLM 判别器完全一致，供离线链路验证之用。本文正文报告的主仿真实证数据由真实 LLM（deepseek-chat，Temperature=0 或表中注明条件）产生；针对专家意见新增的 Temperature 敏感性实验使用公共 DeepSeek API 当前支持的 deepseek-v4-flash 后端，在同一 Prompt 池上获得2880条真实 API 输出。mock 数据仅用于链路校验，不进入正文统计结论。
+P0204	[43]	附录B 定理1的证明
+P0205	[48]	定理 1（有限事件终止性，重述）。设冻结网络包含有限条有向边 E→，消息类型集合 M 有限，且每个三元组（u,v,m）∈E→×M 至多入队一次。若不施加 T_max 截断，则 LEDS 的事件队列必在有限步后为空。
+P0206	[48]	证明。构造已派发事件集合 H_t={(u,v,m)：截至时间步 t，消息类型 m 已沿有向边 (u,v) 派发}。由于 |E→| 与 |M| 均有限，故 |H_t|≤|E→||M|。引擎在派发前检查三元组 (u,v,m)：若其已属于 H_t，则不再入队；若其尚未出现，则加入 H_t 并至多生成一个新的边消息事件。因此，每个有效的新派发都使 H_t 严格增加，而 H_t 最多增加 |E→||M| 次。所有已派发事件处理完毕后，不再存在可入队的新三元组，队列为空，系统终止。该证明允许同一节点因不同邻居带来的新增暴露而多次更新，与实现中的边级去重一致。需要区分：若运行因达到 T_max 而停止但队列仍非空，则属于截断而非自然收敛。证毕。
+P0207	[43]	附录C 事件驱动引擎的规模化开销分析
+P0208	[48]	作为对贡献二（事件驱动引擎）的架构级补充，我们在  四档规模上，于各自新生成的 BA 无标度网络上，以真实 deepseek-chat（）测量事件驱动引擎（LEDS）与全节点轮询基线在  评估次数、稳态步数与墙钟耗时上的差异。
+P0209	[51]	
+P0210	[51]	图C1 事件驱动引擎与全节点轮询在不同网络规模下的评估次数对比
+P0211	[51]	Fig. C1 Evaluation counts of the event-driven engine and full polling at different network scales
+P0212	[51]	表C1 不同网络规模下LEDS与全轮询的评估开销对比（真实deepseek-chat）
+P0213	[51]	Table C1 Evaluation overhead of LEDS and full polling at different network scales
+TABLE 10
+T10R001	网络规模 N	LEDS 评估次数（步数）	全轮询 O(T|V|) 评估次数（步数）	评估次数削减比	LEDS 墙钟(s)	全轮询墙钟(s)
+T10R002	50	93（6）	450（9）	4.8×	126.1	205.3
+T10R003	100	250（11）	900（9）	3.6×	345.1	178.1
+T10R004	300	829（13）	2,100（7）	2.5×	1,150.0	357.2
+T10R005	1000	2,607（12）	8,000（8）	3.1×	4,166.8	1,253.8
+END TABLE 10
+P0214	[48]	在四档规模上，事件驱动均削减  评估次数（全轮询按  近线性膨胀至  时的 8,000 次，LEDS 仅对活跃节点求值，削减比 2.5×～4.8×）。须强调三点边界，避免过度解读：其一，该削减为架构级指标，未必等比转化为墙钟或成本：空闲节点的相同 Prompt 大多命中响应缓存，故本表除  外 LEDS 墙钟反而更高（正文 4.3 节已就此辨析）；其二，削减比不随规模单调递增，而取决于实例的收敛快慢与全轮询实际步数 （本批  在 7～9 间波动），故  档反而最低（2.5×），不能据此外推”规模越大越省”；其三，本表  的 829 次与正文 4.3、4.4、4.6 节同规模实验的评估次数（662 / 701 等）差异，源于图实例、源节点、缓存状态与运行间非确定性（4.4 节）的不同，均属同一散布带内的合理波动。

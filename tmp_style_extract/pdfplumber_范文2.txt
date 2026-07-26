@@ -1,0 +1,560 @@
+
+===== PAGE 1 =====
+
+第 12 卷 第 3 期 指 挥 与 控 制 学 报 Vol. 12，No. 3
+2026 年 6 月 JOURNAL OF COMMAND AND CONTROL June，2026
+面向无人潜航器协同反潜的分层联邦强化学习技术
+潘永淇1 罗来龙1 刘 毅1 朱 承1,*
+（1. 国防科技大学 信息系统工程重点实验室，长沙 410073）
+摘 要 无人潜航器因机动性强且不易被发现等特性被广泛应用于协同反潜任务。但现有方法传输开销大，或面临单点失效
+或算力冲突等问题。提出了面向无人潜航器协同反潜的分层联邦强化学习技术，阐述了分层联邦学习框架，弱化了中心聚合
+器的作用，提高了系统的鲁棒性与抗毁伤能力。设计了基于强化学习的自适应协同训练机制，给出各UUV最优参数选择方
+案，实现冲突消解。实验表明，该方法提高了协同反潜的性能和稳定性。
+关键词 分布式作战，协同控制，无人潜航器，反潜，数据共享，联邦学习，强化学习
+引用格式 潘永淇, 罗来龙, 刘毅, 等. 面向无人潜航器协同反潜的分层联邦强化学习技术 [J]. 指挥与控制学报, 2026, 12(3):
+419−426
+DOI 10.20278/j.jc2.2096-0204.2023.0024
+Hierarchical Federated Reinforcement Learning for Cooperative Anti-submarine Warfare of
+Unmanned Underwater Vehicles
+PAN Yongqi1 LUO Lailong1 LIU Yi1 ZHU Cheng1,*
+（1. Science and Technology on Information Systems Engineering Laboratory, National University of Defense Technology, Changsha 410073, China）
+Abstract Unmanned underwater vehicles (UUVs) are widely used in cooperative anti-submarine missions due to their high
+maneuverability and low detectability. However, the existing methods either incur high transmission overhead or face problems such as
+single-point failure and computational conflicts. Therefore, a hierarchical federated reinforcement learning technology for UUV cooperative
+anti-submarine warfare is proposed. A hierarchical federated learning framework is constructed to weaken the role of the central aggregator
+and improve system robustness and damage resistance. Furthermore, an adaptive cooperative training mechanism based on reinforcement
+learning is designed, and the optimal parameter selection scheme of each UUV is presented to resolve conflicts. Experimental results show
+that the proposed method improves both the performance and stability of cooperative anti-submarine missions.
+Key words distributed warfare, cooperative control, unmanned underwater vehicles, anti-submarine, data sharing, federated learning,
+reinforcement learning
+Citation PAN Y Q, LUO L L, LIU Y, et al. Hierarchical federated reinforcement learning for cooperative anti-submarine warfare of
+unmanned underwater vehicles[J]. Journal of Command and Control, 2026, 12(3): 419-426
+无人潜航器（unmanned underwater vehicle, UUV） 子任务：1） 识别检测可疑目标；2） 组建协同跟踪联
+具有机动性强、成本低等特点，并在现代海洋环境 盟；3） 潜艇的跟踪与捕获。其中第二阶段，本质是
+中发挥了重要作用 [1] ，包括执行情报侦察、海洋环 以时间优先级或精度优先级等为目标，以算力、通
+境调查、水面/水中目标探测与跟踪等任务 [2−4] 。 信等为约束组建一个合适的协同反潜UUV群组，
+在军事领域中，在UUV上搭载的水下电视摄 以实现对潜艇的识别与跟踪，尤为重要。
+针对UUV集群协同反潜的控制策略，当前研
+像系统和水下激光成像系统，因其被动式作业、高
+[7] 究主要沿集中式与分布式两条路径展开。集中式策
+分辨率等优于声纳系统的特点 ，在反潜作业中发
+[12]
+略通常采用水面舰艇作为集中控制器 。例如，文
+挥巨大作用。其使用卷积神经网络等深度学习模型
+实现潜艇识别 [8] ，但单个UUV所采集的数据量无法
+献[13]以无人水面航行器（unmanned surface vehicle,
+USV）作为通信与数据处理中心，汇聚各UUV所收
+支撑模型有效训练，需在UUV群组间进行数据协
+集到的数据进行集中处理，以提高目标围猎的成功
+同，以实现协同反潜。
+率。但UUV通信主要依靠水声通信手段，其相较
+协同反潜的过程可以划分为3个连续且并行的
+于电磁波存在低传输速率，高时延等问题，且随着
+距离增加，信号衰减显著 [14] 。进一步，文献[15]考
+收稿日期 2023−02−14 修订日期 2023−08−23 录用日期 2023−09−22
+*通信作者简介 朱 承 （1976— ）, 男, 湖南长沙人, 博士, 教授。 虑了复杂的水下通信环境设计了数据共享模型，以
+
+===== PAGE 2 =====
+
+420 指 挥 与 控 制 学 报 12 卷
+实现USV对UUV群组的协同控制。文献[16]则设 合器的依赖，提高了聚合效率，其中基于Raft共识
+计了集群控制器，通过预设的协同及信息交互规则 的聚合器动态推选算法为全局训练提供聚合器的确
+使UUV之间交换信息以相互协同。然而，上述方 定和更新，提高了系统的抗毁伤能力。
+法仍需传输原始数据，在集群规模较大时产生高通 3） 设计了基于强化学习的自适应协同训练机
+信开销，且在复杂多变的海洋环境中，无法有效应 制。该机制利用强化学习在保证协同反潜任务的前
+对单点攻击，系统鲁棒性不足。 提下，个性化的设置各UUV的联邦学习参数，很
+鉴于集中式策略的固有缺陷，研究趋势更多向 好的实现冲突消解，求出最优平衡点。
+分布式策略演进 [9] 。文献[17]提出了分散控制策略，
+通过整合各UUV生成的结果进行协同控制。文 1 方法总体架构
+献[18]则提出了一种基于动态影响图和期望效用理
+论的自主决策方法，从若干UUV的决策方案中选 本文将联邦学习引入UUV协同反潜领域，实
+择最优决策。文献[19]考虑了水声通信的不利因 现了在不传输原始数据的前提下边缘UUV数据的
+素，基于共识算法设计了动态任务分配机制，考虑 协同训练。其核心是设计了1个分层联邦学习框架
+了时间算力开销以及反潜任务成功率，取得了接近 来动态划分集群和实现参数聚合，提高了系统的鲁
+于无通信约束的结果。但上述几种方法仍无法实现 棒性及聚合效率，对应于文中第3章。该方法同时
+数据级的协同，不能充分利用各UUV的原始数 关注于UUV的个性化需求，提出了基于强化学习
+据。文献[20]设计了一种两层的领导-跟随者模型通 的自适应协同训练机制，以实现更好的冲突消解和
+过共识算法形成动态柔性拓扑，并通过领导者节点 应对突发情况，对应于文中第4章。基于该机制，
+进行全局协调以实现UUV集群协同。文献[21]进一 UUV可以自由加入或退出协同反潜联盟，并依据需
+步通过强化学习对领导者节点进行选择，提高了反 求个性化制定协同训练参数。
+潜精度并减少了UUV能耗。但这两种模式需要汇
+如图1所示，从属于不同水面舰船的UUV，
+聚跟随者节点的原始数据，造成了较大的传输 对应图中UUV1，UUV2，···，UUVn ，可以自组织参
+1 1 m
+开销。
+与协作反潜，其中，UUV按照实际地理位置聚类形
+综上所述，现有协同反潜方法面临3个瓶颈：
+成多个集群，并从中选拔集群头聚合过渡的中间模
+一是集中式策略存在单点失效和高通信开销；二是
+型，再从集群头中动态选举全局聚合器完成全局聚
+分布式策略多停留在决策层协同，未能实现数据级
+合，图1中聚合器为 UUV3，聚合器仅将模型下发给
+的高效共享，且算力冲突与个体偏好差异被忽视； 2
+集群头，集群头在各自集群内发布模型。协同反潜
+三是缺乏动态自适应机制，难以应对UUV中途加
+联盟是动态可变的，部分UUV由于前序执行其他
+入/退出或突发任务等不确定性。
+任务而中途加入协同反潜，图1中的 UUV3，部分
+随着物联网、边缘计算、边缘智能等技术的发 1
+UUV因 突 发 情 况 而 中 断 反 潜 行 动 ， 如 图 1中
+展，诞生了多种大规模边缘设备的模型协同训练方
+法 [10] ，为UUV集群协同反潜提供了技术支撑。特 UUV1 2 。此外，在协同过程中，UUV会根据自身情
+别是联邦学习框架 [11] ，其无需传输原始数据，可以 况使用个性化参数参与协同训练。
+很好地匹配边缘UUV集群协同反潜的需求。
+因此，本文提出了面向无人潜航器协同反潜的 2 分层联邦学习框架
+分层联邦强化学习技术，其中分层机制减少了对聚
+合器的依赖且降低了对聚合器的算力要求。而基于 为达到弱化中心聚合器以提高系统鲁棒性的目
+强化学习的自适应协同训练机制，为UUV节点的 的，在考虑UUV算力无法承担大规模聚合工作
+加入与退出协同反潜联盟自由化，以及UUV协同 的基础上，设计了一种分层联邦学习框架。依据
+训练参数个性化制定提供有效支撑。 该框架，网络中参与对象通过位置信息聚类可以划
+本文的主要贡献可以概括为 分为多个小规模群组，提高了聚合效率，能够支
+1） 将联邦学习应用于协同反潜，并提出了面向 撑大规模UUV集群执行协同反潜任务。在所设计
+无人潜航器协同反潜的分层联邦强化学习技术。该 框架中，全局聚合器通过分布式、动态推选，提
+方法利用边缘UUV在本地训练模型，并将参数进 高了自组织、自适应能力，并能够更好地抗毁伤和
+行聚合以实现协同训练。 应对突发情况，增强了系统鲁棒性与应急响应
+2） 设计了分层联邦学习架构，降低了对中心聚 能力。
+
+===== PAGE 3 =====
+
+3 期 潘永淇等：面向无人潜航器协同反潜的分层联邦强化学习技术 421
+2.1 基于位置信息聚类的UUV集群划分 分簇的个数，即应划分的群组数量：
+UUV集群的水声通信环境导致了UUV间的通 k = argmax(C(k): k 2 N + ) （2）
+信衰减快、速率低而时延高。因此，针对UUV集 基于所求k值，代入至Kmeans算法簇划分，并
+群的划分，采用基于地理位置信息划分的思路展 选取划分得出的各个簇的簇中心作为集群头，完成
+开，具体而言，采用Kmeans算法，以UUV的经纬 各个小集群中的模型分发与聚合工作。系统会预设
+度及海拔高度（相对水平面深度）作为输入进行聚 1个时间周期，每轮转1个时间周期或存在节点中
+类，所得簇即为划分出的UUV群组。本文假定 途加入、退出等情况，则需要重新运行Kmeans算
+UUV位置的初始分布不存在大集群集中的现象，即 法，得到新的分组及集群头。
+划分所得的各群组中UUV数量相当。Kmeans算法
+2.2 基于Raft共识的全局聚合器选举方法
+的关键是确定聚类种类数量k。从UUV间的通信带
+宽约束及UUV的算力限制的这两个角度确定 k值。 在完成集群划分后，需要从各集群的集群头中
+由于每个UUV均需要进行本地训练，只考虑 选拔一个UUV作为全局聚合器。然而选择一个特
+各集群头聚合中间模型及全局聚合过程中所产生的 定的UUV作为全局聚合器可能存在单点失效等问
+通信和算力负载。待划分UUV集群中UUV的数量 题。Raft算法则具备分布式、共识效率高、鲁棒性
+为n个，基于上文所给出的假设，为方便计算将n个 强等特点 [22] ，因此，本文提出并设计了基于Raft共
+UUV平均分配至 k个群组中。而联邦学习聚合的通 识的全局聚合器选举方法。
+信与算力负载均同参与协同的UUV数量成正比关 将各集群头分为领导者、跟从者和候选人3种
+系，令每增加1艘UUV产生额外通信负载 C 1 ，产 角色，其中，领导者作为全局聚合节点接收各集群
+生额外算力负载C 2 。为降低个体UUV算力及通信 头的中间模型并将其聚合为全局模型下发给各集群
+压力，将算力及通信负载在UUV分散越平均说明
+头；跟从者则是只向领导者传递中间模型，和接收
+划分越优，而同反潜过程中中间聚合与全局聚合所 全局模型的集群头；候选人是系统中跟从者竞选领
+产生的聚合消耗差异C与划分簇的个数关系如下：
+导者时的临时状态。
+( )
+C(k) = n(cid:0)k2 (cid:1)(C +C )=k （1） 假设系统中的UUV是诚实且好奇的，即只存
+1 2
+因此，令聚合消耗差异取得最小值的k则为划 在毁伤宕机等情况，不会产生恶意攻击系统的行
+舰艇1 舰艇2 … 舰艇m
+… … …
+UUV 1 1 UUV 1 2 UUV 1 3 UUV 2 1 UUV 2 2 UUV 2 3 UUV1 m UUVn m
+协同反潜联盟
+根据地理位置
+信息聚类
+任务伊始加入
+任务伊始加入
+UUV 1 1集群头 U 全 U 局 V 2 3 聚 集 合 群 器 头 … UUV1 m 集群头 中途退出
+中途加入
+敌方潜艇
+集群1 集群2 集群t
+图 1 无人潜航器协同反潜方法示意图
+Fig. 1 Schematic diagram of UUV cooperative anti-submarine method
+
+===== PAGE 4 =====
+
+422 指 挥 与 控 制 学 报 12 卷
+为。在此假设下，本文提出了领导者节点的选举规 7: 计算z2
+i
+则，从历史信誉与全局聚合效率两方面考量。 8: end for
+其中，历史信誉是对UUV执行任务能力的评 9: 选取前80%节点组成候选者节点列表 L
+c
+价，主要通过专家打分机制等方法赋予值，采用 10: for i in L
+c
+80%机制 [23] ，选取前80%的节点可以转换为候选者 11: 计算z1
+i
+节点参与领导者竞选。 12: end for
+全局聚合效率计算则分别考虑了节点的剩余可 13: for i in L
+用算力和节点与剩余节点的通信延迟，计算方式如 14: for j in L
+c
+式（3）所示，其中z1表示UUV节点 i的全局聚合效 15: 计算z ，选出1个节点投票
+i j
+率，w (0 < w < 1)表示对算力和通信能力的偏好， 16: end for
+1 1
+p 表示UUV节点 i的剩余可用算力，v 表示UUV节 17: end for
+i i
+点i与剩余节点的通信延迟。 18: 获得选票超过半数的节点当选聚合器节点N
+z1 = w (cid:1) p +(1(cid:0)w )=v （3） 19: return N
+i 1 i 1 i
+其中，对于节点i的剩余可用算力，计算方式如式
+（4）所示，r 是线程数，u 是CPU使用率。针对于节 3 基于强化学习的自适应协同训练机制
+i i
+点的通信延迟，计算方式如式（5）所示，其中d 是节
+ij
+点i与节点 j的距离，X是模型大小，v是网络传输 上述框架尚不能处理多任务产生的算力冲突等
+速率。 问题，如可能存在UUV包含环境探测等其他任务
+作为主任务，在传统联邦学习中，其本地训练轮数
+p = r (cid:1)(1(cid:0)u ) （4）
+i i i
+等参数相对固定，但设备算力条件迥异，需要个性
+v i = max(d ij (cid:1)X=v) （5） 化调整参数。强化学习算法 [24] 能通过观察智能体的
+根据上述计算，可以得到UUV节点 i的全局聚
+操作所带来的反馈，来解决有限信息条件下的不确
+合效率cap1以及它的历史信誉值cap2，将两者归一
+i i 定性问题，并获得最优解决方案。因此，提出了基
+化后加权平均得到节点i的综合能力评分cap ，作为
+i 于强化学习的自适应协同训练机制，在保证全局模
+遴选领导者的依据，计算方式如式（6）所示，其中
+型训练效果的前提下，能够自适应进行参数调整。
+w (0 < w < 1)表示对两者的偏好。
+2 2 ∑ ∑
+3.1 参数个性化联邦学习效用模型
+z = w (cid:1)z1= z1+(1(cid:0)w )(cid:1)z2= z2 （6）
+i 2 i i 2 i i
+i i UUV的算力限制与任务非单一、不确定性使
+各候选节点依据系统给定的w 1 计算自身全局聚 得按照固定设置的联邦学习参数开展联合反潜任务
+合效率，将其与历史信誉值广播，各节点在收到信 会产生冲突且无法消解。因此，通过评估各UUV
+息后根据各节点偏好选定1个固定的 w 2 为各候选者 配置个性化联邦学习参数对联合反潜任务及UUV
+节点打分，之后每个UUV节点从候选者节点中推 自身任务的效用，以确定UUV的参数值。
+选1艘UUV作为领导者节点，赢得超过半数选票 UUV的本地轮数 l的效用函数可以定义为收益
+的候选者节点则转变为领导者节点，其余的退化为 与其成本之差，如式（7）所示，其中，收益为
+跟随者节点，每当经过预设周期或集群头集合产生 UUV进行本地训练对当前全局训练轮次所作贡献；
+更新就会重新开始选举，完整过程见算法1。 成本则量化为两个方面：UUV参与本轮联邦学习所
+产生的能耗及与其自身其他任务所形成的冲突。
+算法1 基于Raft共识的全局聚合器选举方法
+R (l) = (cid:11)ln(1+e (cid:1)q (l))(cid:0)(1(cid:0)(cid:11))(cid:1)c (l) （7）
+输入：集群头节点列表L i i i i
+其中，R (l)是UUV节点 i的效用；(cid:11)表示对收益与
+输出：聚合器节点N i
+成本的偏好，在0到1之间； e 代表了UUV节点
+1: 初始化选举标识m=0，标识不为零则进行节点选择 i
+i当选集群头和聚合节点的总次数，在其基础上加
+2: if L变化 or N距离上一轮选举经过了1个时间周期
+上1； q (l)是UUV节点 i在本地训练l轮对模型所产
+3: m=1 i
+生的贡献，其计算方法见式（8），c (l)是UUV节点
+i
+4: end if
+i本地训练l轮所产生的成本，见式（9）。
+5: if m=1 ( )
+q (l) = gt(l)(cid:0)gt(cid:0)1 =gt(cid:0)1 （8）
+6: for i in L i i 0 0
+
+===== PAGE 5 =====
+
+3 期 潘永淇等：面向无人潜航器协同反潜的分层联邦强化学习技术 423
+∑
+其中，gt
+i
+(l)是UUV节点 i在第t轮全局训练中经过l轮 V
+(cid:25)
+(s) = R(s;a;s′)+(cid:18) P(s′js;a)(cid:1)V
+(cid:25)
+(s′) （14）
+本地训练后所产生的模型精度，gt(cid:0)1是上一轮中全局 s′
+0
+模型的精度。 π(cid:3) = argmaxV
+(cid:25)
+(s);8s 2 S （15）
+UUV节点 i的成本c (l)由本地训练能耗φ (l)及 (cid:25)
+其本地训练l轮与其他任务
+i
+的冲突(cid:21) (l)两部分构成
+i
+。
+其中，(cid:18) 2 (0;1)为衰退因子，其越趋近于1，则认为
+i
+UUV越着眼于长期奖励，据式（14）、式（15）可得：
+c (l) = (cid:12)(cid:1)φ (l)+(1(cid:0)(cid:12))(cid:1)(cid:21) (l) （9） 8 9
+i i i >>< ∑ >>=
+本文给出了冲突的定义，冲突主要由于UUV
+V (cid:25)(cid:3) (s) = max>>: R(s;a;s′)+(cid:18) P(s′js;a)(cid:1)V (cid:25)(cid:3)(s′)>>;
+算力的算力限制产生，因此，通过可用算力对其他 a s′
+任务的影响来衡量冲突值。任务可划分为两种：一 （16）
+种是有固定算力要求，需要达到硬性的算力投入标 Q值函数则可以定义为如式（17），依据式（16）
+准；另一种则是任务效果与算力投入成正比，无硬 可得式（18），Q值则按照式（19）更新， "为学习率，
+性投入要求，默认考虑第1种类型的任务。在此基 从而可以构建出完整的Q值表，根据Q值表得出接
+础上，给出了冲突值的计算∑方式，如式（10）所示。 近于最优的策略，具体的步骤见算法2。
+∑
+(cid:21) i (l) = (cid:13) i j(l) （10） Q(s;a) = R(s;a;s′)+(cid:18) P (cid:25) (s′js;a)(cid:1)V (cid:25) (s′) （17）
+8
+(cid:13) i j(l) =
+>><
+>>:
+0(
+h
+;(cid:28)
+(cid:0) i
+j(l
+(cid:28)
+)
+j
+>
+(l)
+h)j
+=h
+j
+;(cid:28)j(l) < h （11） V (cid:25)(cid:3) (s) = m
+s′
+axQ(s;a) （18）
+j i j i j a
+(cid:28) i j(l) = (cid:28) i j(cid:0)1(l)(cid:0)h j(cid:0)1 （12） Q(s;a) = Q(s;a)+"(R+(cid:18)V (cid:25)(cid:3)(s′)(cid:0)Q(s;a)) （19）
+其中，h 是执行任务 j时所需算力；(cid:28)j(l)是执行任务
+j i
+j前，UUV所剩余算力。 算法2 基于Q学习的联邦学习参数优化算法
+3.2 基于Q学习的联邦学习参数优化算法
+输入：衰退因子(cid:18)，学习率"
+输出：最佳本地训练轮数选择策略π(cid:3)
+Q学习是智能体在无监督且环境未知情况下，
+1: 初始化随机状态（设置本地训练轮数），t=0
+自学习的一种强化学习算法。通过该算法智能体与
+2: for t < T
+环境不断交互得到反馈，从而取得更高的效用。因
+3: 根据策略选择一个行为（改变本地训练轮数）
+此，设计了基于Q学习的联邦学习参数优化算法，
+4: 执行行动并依据式（13）计算奖励（reward）
+使得各UUV可以个性化选择参数，达到消解任务
+5: 根据式（19）计算出 q 值表
+冲突的作用。
+6: end for
+文中智能体即为UUV，将其参数设置过程定
+7: 根据式（18）得到最优策略π(cid:3)
+义成马尔可夫决策过程fS;A;P;Rg，其中，S 是状态
+8: return π(cid:3)
+空间集合，其要素包含了UUV剩余算力、其他任
+务数量、其他任务所需算力要求、本地训练轮数；
+A是动作集合，本地训练轮数的变化即为动作；P代 4 实验验证与性能分析
+表了不同UUV状态间的转移概率； R代表了UUV
+采用不同本地轮数造成状态转换所得的奖励。 为验证本文所提出的UUV协同反潜方法，设
+在上节中，给出了参数个性化后的效用计算方 计了一个协同反潜场景，考虑到反潜实际应用，以
+法。在此方法计算所得的效用值基础上，给出不同 目标识别模型作为协同训练模型，验证所提出的分
+参数选择下的奖励值。奖励值通过效用值产生的变 层联邦学习框架和基于强化学习的自适应协同训练
+化体现，因此，奖励函数如下所示： 机制的有效性，并对模型测试结果进行分析，从而
+R(s;a;s′) = R (l′)(cid:0)R (l) （13） 证明所提出的协同反潜方法的可行性和高效性。
+i i
+其中，s是UUV当前所处的状态， a是本地训练轮
+4.1 实验场景设计与环境设置
+数由l到l′的动作，R (l)则是UUV节点 i本地轮数为
+i
+l时的效用值。 选用半径50 n mile的圆形地图作为反潜区域，
+基于此奖励函数，定义了如式（14）的状态价值 以圆心为原点，在区域内随机初始化5个点作为水
+函数V (s)，则各UUV的最优联邦学习参数选择方 面舰艇，每个水面舰艇拥有6艘UUV，采用如表1
+(cid:25)
+案π(cid:3)，如式（15），以实现参数个性化设置。因此： 设置的虚拟机模拟UUV，各UUV位置以其所隶属
+
+===== PAGE 6 =====
+
+的水面舰艇坐标为横纵坐标的期望、以10 n mile为 隶属不同的组织（水面舰艇），不同的颜色则表示了
+标准差进行初始化。目标识别模型选用ResNet- 划分后所在的小集群，集群2的集群头当选为第
+18模型，数据集选用CIFAR-10数据集。而其他任 1个周期的全局聚合器。
+务采用计算Hash值的形式实现，通过设置不同的难 在此划分基础上，假设系统中仅存在A类节
+度值以调节难度要求。 点，测试各UUV平均每次全局聚合的数据传输
+量，并与传统的联邦学习架构进行对比，如图3所
+表 1 UUV虚拟机的配置信息
+示。可以看出, 所提出的分层联邦学习架构，虽然总
+Table 1 Configuration information of UUV virtual machine
+数据传输量并未减少，但其单艘UUV的最高数据
+类别 参数
+传输量远小于传统联邦学习，可以支撑更大规模的
+CPU Intel（R） Core（TM） i7-7700HQ 2.80 GHz 协同反潜任务。
+内存（RAM） 8 GB
+GPU GTX1050 2 500
+CUDA 10.2 2 000
+Python 3.9
+1 500
+在协同反潜中，假设UUV位置不变，UUV可
+1 000
+以划分为3类节点：一类为仅执行反潜任务的
+UUV（A类节点）；一类为执行反潜任务同时存在其 500
+他任务的UUV（B类节点）；一类为执行反潜任务中
+0
+途遭遇突发情况而产生其他任务的UUV（C类节
+点）。实验在此3类节点的基础上进行。
+4.2 结果分析与性能检验
+基于上述场景设置，分别对所提出的分层联邦
+学习框架和基于强化学习的自适应协同训练机制进
+行测试，以证明所提出架构或机制的有效性。
+4.2.1 分层联邦学习框架检验
+依据上述实验场景设置，可划分出如图2所示
+的分层联邦学习架构，其中，不同的形状代表其所
+BM/量输传据数
+数据传输量对比
+传统联邦学习 分层联邦学习 传统联邦学习 分层联邦学习
+总传输量 总传输量 单点传输最值 单点传输最值
+图 3 数据传输量对比图
+Fig. 3 Comparison of data transmission volume
+进一步，假设B类节点与C类节点不同时存
+在，改变系统中B类节点与C类节点的比例，测
+试系统经过10次全局聚合后的模型精度，结果如
+图4、图5所示。可以发现获得相较于传统联邦学
+习所提出的分层架构可以获得更高的精度，且算力
+限制越强所带来的性能提升越显著。另外，可以观
+察到分层架构对这两类节点相较于传统模式更加不
+敏感，具有较强的鲁棒性。
+75
+70
+65
+60
+55
+50
+0 5 10 15 20 25 30
+%/度精
+424 指 挥 与 控 制 学 报 12 卷
+40
+集
+群
+5
+20 分层联邦学习
+集
+群 集 传统联邦学习
+反 1 群
+0 潜 2
+海
+域
+集
+−20 集 群
+群 3
+4
+−40
+−40 −20 0 20 40
+B类节点数量占比/%
+图 2 UUV协同反潜分层联邦学习划分架构图
+Fig. 2 Hierarchical federated learning partition architecture of 图 4 B类节点对模型精度影响
+UUV cooperative anti-submarine Fig. 4 Influence of type-B nodes on model accuracy
+
+===== PAGE 7 =====
+
+75
+70
+65
+60
+55
+50
+0 5 10 15 20 25 30
+/
+%度精
+分层联邦学习
+传统联邦学习
+C类节点数量占比/%
+图 5 C类节点对模型精度影响
+Fig. 5 Influence of type-C nodes on model accuracy
+4.2.2 基于强化学习的自适应协同训练机制验证 可以支撑更大规模的协同反潜任务。设计了基于强
+化学习的自适应协同训练机制，实现了联邦学习参
+通过上述实验，证明了在UUV协同反潜场景
+数个性化定制，减少了任务冲突。一系列实验结果
+下，分层联邦学习框架较于传统联邦学习更具备优
+表明，该方法提高了协同反潜的性能和稳定性。
+势。在本节中，依托分层联邦学习框架，对基于强
+化学习的自适应协同训练机制进行验证。通过设置
+References
+UUV所 能 聚 合 模 型 的 个 数 上 限 为 20， 以 模 拟
+UUV节点的算力限制，分别计算采用自适应协同训
+[1] 陈强. 水下无人航行器 [M]. 北京: 国防工业出版社, 2014:
+练机制和传统参数固定模式下的UUV平均效用。
+1-333.
+与5.2.1节类似，设置了不同的B类节点与C类节
+CHEN Q. Underwater unmanned vehicles[M]. Beijing:
+点比例，以进行对比试验。
+National Defense Industry Press, 2014: 1-333. (in Chinese)
+从图6、图7可以看出，该机制能够实现
+UUV的冲突消解，其中，应对B类节点比例提升， [2] FIORELLI E, LEONARD N E, BHATTA P, et al. Multi–
+机制始终可以保持高水平的效用，但对于C节点的 AUV control and adaptive sampling in Monterey bay[J]. IEEE
+增多则会产生一定程度的效用下降。 Journal of Oceanic. Engineering, 2006, 31(4): 935-948.
+5 结论 [3] DAS B, SUBUDHI B, PATI B B. Cooperative formation
+control of autonomous underwater vehicles: an overview[J].
+International Journal of Automation and Computing, 2016,
+本文围绕UUV协同反潜问题，提出了一种分
+13(3): 199-225.
+层联邦学习架构，提高了模型抗毁伤能力和鲁棒
+性，并降低了UUV个体的算力与通信负载，从而
+[4] WU Y, Coordinated path planning for an unmanned aerial-
+3.0
+aquatic vehicle (UAAV) and an autonomous underwater vehi-
+2.5 cle (AUV) in an underwater target strike mission[J]. Ocean
+Engineering, 2019, 182: 162-173.
+2.0
+1.5 [5] 李亮, 邹金顺. 国外水下无人系统技术发展现状与趋势浅
+析 [J]. 舰船科学技术, 2017, 39(23): 6-9.
+LI L, ZOU J S. Technical development status and trend of
+underwater unmanned systems technology abroad[J]. Ship
+Science and Technology, 2017, 39(23): 6-9. (in Chinese)
+[6] ZHAO Z Y, LI X K, XU Y, et al. Research on related prob-
+lems of unmanned underwater vehicle anti-submarine warfare
+[C]//Proceedings of the IEEE International Conference on
+VUU
+用效均平
+3.0
+2.5
+2.0
+1.5
+1.0
+0.5
+0
+0 5 10 15 20 25 30
+1.0
+0.5 分层联邦学习
+传统联邦学习
+0
+0 5 10 15 20 25 30
+B类节点数量占比/%
+图 6 B类节点对UUV平均效用的影响
+Fig. 6 Influence of type-B nodes on average utility of UUV
+用效均平VUU
+3 期 潘永淇等：面向无人潜航器协同反潜的分层联邦强化学习技术 425
+分层联邦学习
+传统联邦学习
+C类节点数量占比/%
+图 7 C类节点对UUV平均效用的影响
+Fig. 7 Influence of type-C nodes on average utility of UUV
+
+===== PAGE 8 =====
+
+426 指 挥 与 控 制 学 报 12 卷
+Unmanned Systems, 2019: 931-934. neering University, 2017: 1-160. (in Chinese)
+[7] 肖胜, 张路青, 许中胜. 军用UUV光电探测技术的应用方 [15] KANG J G, KIM T, KWON L, et al. Design and implementa-
+向 [J]. 舰船电子工程, 2014, 34(11): 165-168. tion of a UUV tracking algorithm for a USV[J]. Drones, 2022,
+XIAO S, ZHANG L Q, XU Z S. Application of military UUV 6(3): 66.
+photoelectric detection technology[J]. Ship Electronic Engi-
+neering, 2014, 34(11): 165-168. (in Chinese) [16] WANG H L, YAO Z X, GUO Y H. Collaborative control of
+unmanned underwater vehicles[J]. Journal of Physics Confer-
+[8] 宋博扬, 王凯帅, 刘冠杉. 卷积神经网络在UUV上图像识 ence Series, 2021, 1887(1): 012009.
+别的应用 [C]//第六届中国指挥控制大会论文集(上册),
+2018: 280-284. [17] 严浙平, 白锐, 迟冬南, 等. 面向目标搜寻的多UUV编队
+SONG B Y, WANG K S, LIU G S. Application of convolu- 协调控制 [J]. 计算机测量与控制, 2013, 21(6): 1532-1536.
+tional neural network for image recognition on UUV[C]// YAN Z P, BAI R, CHI D N, et al. Multi-UUV formation
+Proceedings of the Sixth China Command and Control Confer- facing the target search to coordinate control[J]. Computer
+ence (Volume 1), 2018: 280-284. (in Chinese) Measurement & Control, 2013, 21(6): 1532-1536. (in Chinese)
+[9] 阳东升. 边缘崛起: 边缘C2背景、概念与模式机理分析 [18] YAO H F, WANG H J, WANG Y. UUV autonomous deci-
+[J]. 指挥与控制学报, 2020, 6(2): 113-122. sion-making method based on dynamic influence diagram[J].
+YANG D S. Edge rising: background, conception and mode of Complexity, 2020, 5: 1-14.
+edge command and control[J]. Journal of Command and
+Control, 2020, 6(2): 113-122. (in Chinese) [19] WU X J, GAO Z Y, YUAN S, et al. A Dynamic task alloca-
+tion algorithm for heterogeneous UUV swarms[J]. Sensors,
+[10] WANG X F, HAN Y W, LEUNG V C M, et al. Convergence of 2022, 22(6): 2122.
+edge computing and deep learning: a comprehensive
+survey[J]. IEEE Communications Surveys & Tutorials, 2020, [20] LIANG H T, KANG F G, HUI C, et al. Two-layer virtual
+22(2): 869-904. leader-following: an adaptive cooperative path following
+control for crowded UUV swarm subjected to constraints[J].
+[11] KONECNY J, MCMAHAN H B, YU F X, et al. Federated Ocean Engineering, 2022, 257: 111494.
+learning: strategies for improving communication efficiency
+[EB/OL]. (2017-10-30)[2023-02-10]. https://arxiv.org/abs/ [21] LIAO R H, SU W, WU X R, et al. Reinforcement learning
+1610.05492. based mobile underwater localization for silent UUV in
+underwater acoustic sensor networks[J]. Wireless Communi-
+[12] 陈强. 水下无人搜探系统装备使用模式分析 [J]. 舰船科学 cations and Mobile Computing, 2022, 2022: 2524764.
+技术, 2017, 39(1): 137-149.
+CHEN Q. Analysis of equipment application mode for search [22] ONGARO D, OUSTERHOUT J. In search of an understand-
+and detection system of UUV[J]. Ship Science and Technol- able consensus algorithm[C]//Proceedings of the USENIX
+ogy, 2017, 39(1): 137-149. (in Chinese) Annual Technical Conference. Philadelphia: USENIX Asso-
+ciation, 2014: 305-319.
+[13] 邹佳运, 张文清, 曲泓玥, 等. 面向水下目标搜索的
+USV&UUV编队协同队形规划 [J]. 无人系统技术, 2021, [23] 尹荣荣, 张文元, 杨绸绸, 等. 基于简化云与 K/N 投票的选
+4(3): 40-46. 择性转发攻击检测方法 [J]. 电子与信息学报, 2020,
+ZOU J Y, ZHANG W Q, QU H Y, et al. Cooperative forma- 42(12): 2841-2848.
+tion planning of UUV & formations for underwater target YIN R R, ZHANG W Y, YANG C C, et al. A selective
+search[J]. Unmanned Systems Technology, 2021, 4(3): 40-46. forwarding attack detection method based on simplified cloud
+(in Chinese) and K/N[J]. Journal of Electronics & Information Technology,
+2020, 42(12): 2841-2848. (in Chinese)
+[14] 刘一博. 水下潜航器编队海洋勘测的协调控制方法研
+究[D]. 哈尔滨: 哈尔滨工程大学, 2017: 1-160. [24] YANG Y, LUO R, LI M, et al. Mean field multi-agent rein-
+LIU Y B. Research on coordination control of multiple under- forcement learning[C]//Proceedings of the 35th International
+water vehicles for ocean exploration[D]. Harbin: Harbin Engi- Conference on Machine Learning, 2018: 5571-5580.
