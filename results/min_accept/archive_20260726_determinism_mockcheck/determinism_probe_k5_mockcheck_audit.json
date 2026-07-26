@@ -1,0 +1,397 @@
+{
+  "metadata": {
+    "started_utc": "2026-07-26T02:06:04+00:00",
+    "finished_utc": "2026-07-26T02:06:04+00:00",
+    "mode": "mock",
+    "mock": true,
+    "model": "deepseek-chat",
+    "endpoint": "https://api.deepseek.com/v1/chat/completions",
+    "temperature": 0.0,
+    "top_p": 1.0,
+    "api_timeout": 60,
+    "api_max_retries": 3,
+    "t_max": 30,
+    "runs": 5,
+    "replays": 3,
+    "config_path": "data\\exp1_scalefree.json",
+    "config_sha256": "097657e00b6c653e6bbd8d217681396a548769387719c2517790739bab1efaf4",
+    "prompt_config_sha256": "cb4a6e6c71a0be8d540fd33acfa2fe3e34575299c1adb2dc92a84260df208be3",
+    "schema_source_sha256": "c033c2eeb3affb21e0c7cee0e0f2563f2e6d63f9f15b94ed01180c9ebb3e1595",
+    "script_sha256": "c94c2213eae44bc0fd02f4bf09ea1cd5e1c713d16fd40ae5185391d3544a1e5b",
+    "graph_source_node": 47,
+    "graph_n": 300,
+    "graph_edges": 1192,
+    "git_commit": "unavailable",
+    "git_dirty": "true",
+    "output_files": {
+      "json": "results\\min_accept\\determinism_probe_k5_mockcheck_audit.json",
+      "md": "results\\min_accept\\determinism_probe_k5_mockcheck_audit.md",
+      "pairwise_csv": "results\\min_accept\\determinism_probe_k5_mockcheck_audit_pairwise_hamming.csv",
+      "replay_csv": "results\\min_accept\\determinism_probe_k5_mockcheck_audit_replay_exact_match.csv",
+      "run_jsonl": "results\\min_accept\\determinism_probe_k5_mockcheck_audit_independent_runs.jsonl"
+    }
+  },
+  "independent_runs": {
+    "runs": [
+      {
+        "steps": 9,
+        "penetration": 47.666666666666664,
+        "converged": true,
+        "invalid": 0,
+        "fallback": 0,
+        "run_name": "fresh_run_01",
+        "started_utc": "2026-07-26T02:06:04+00:00",
+        "finished_utc": "2026-07-26T02:06:04+00:00",
+        "wall_seconds": 0.0,
+        "decision_requests": 561,
+        "cloud_api_calls": 0,
+        "cache_path": "results\\cache\\determinism_k5\\mock\\fresh_run_01.json",
+        "decision_record_count": 0,
+        "final_state_hash": "f20e663a4b2412ebc0de315636ff785ecc4d102c9e6ba945abf0ab4d2a41c284",
+        "trace_hash": "debe95b5199003cc5a8c39c5f08182f46c911a8d8225cb369b3bfedbc6bb81fe"
+      },
+      {
+        "steps": 9,
+        "penetration": 47.666666666666664,
+        "converged": true,
+        "invalid": 0,
+        "fallback": 0,
+        "run_name": "fresh_run_02",
+        "started_utc": "2026-07-26T02:06:04+00:00",
+        "finished_utc": "2026-07-26T02:06:04+00:00",
+        "wall_seconds": 0.0,
+        "decision_requests": 561,
+        "cloud_api_calls": 0,
+        "cache_path": "results\\cache\\determinism_k5\\mock\\fresh_run_02.json",
+        "decision_record_count": 0,
+        "final_state_hash": "f20e663a4b2412ebc0de315636ff785ecc4d102c9e6ba945abf0ab4d2a41c284",
+        "trace_hash": "debe95b5199003cc5a8c39c5f08182f46c911a8d8225cb369b3bfedbc6bb81fe"
+      },
+      {
+        "steps": 9,
+        "penetration": 47.666666666666664,
+        "converged": true,
+        "invalid": 0,
+        "fallback": 0,
+        "run_name": "fresh_run_03",
+        "started_utc": "2026-07-26T02:06:04+00:00",
+        "finished_utc": "2026-07-26T02:06:04+00:00",
+        "wall_seconds": 0.0,
+        "decision_requests": 561,
+        "cloud_api_calls": 0,
+        "cache_path": "results\\cache\\determinism_k5\\mock\\fresh_run_03.json",
+        "decision_record_count": 0,
+        "final_state_hash": "f20e663a4b2412ebc0de315636ff785ecc4d102c9e6ba945abf0ab4d2a41c284",
+        "trace_hash": "debe95b5199003cc5a8c39c5f08182f46c911a8d8225cb369b3bfedbc6bb81fe"
+      },
+      {
+        "steps": 9,
+        "penetration": 47.666666666666664,
+        "converged": true,
+        "invalid": 0,
+        "fallback": 0,
+        "run_name": "fresh_run_04",
+        "started_utc": "2026-07-26T02:06:04+00:00",
+        "finished_utc": "2026-07-26T02:06:04+00:00",
+        "wall_seconds": 0.0,
+        "decision_requests": 561,
+        "cloud_api_calls": 0,
+        "cache_path": "results\\cache\\determinism_k5\\mock\\fresh_run_04.json",
+        "decision_record_count": 0,
+        "final_state_hash": "f20e663a4b2412ebc0de315636ff785ecc4d102c9e6ba945abf0ab4d2a41c284",
+        "trace_hash": "debe95b5199003cc5a8c39c5f08182f46c911a8d8225cb369b3bfedbc6bb81fe"
+      },
+      {
+        "steps": 9,
+        "penetration": 47.666666666666664,
+        "converged": true,
+        "invalid": 0,
+        "fallback": 0,
+        "run_name": "fresh_run_05",
+        "started_utc": "2026-07-26T02:06:04+00:00",
+        "finished_utc": "2026-07-26T02:06:04+00:00",
+        "wall_seconds": 0.0,
+        "decision_requests": 561,
+        "cloud_api_calls": 0,
+        "cache_path": "results\\cache\\determinism_k5\\mock\\fresh_run_05.json",
+        "decision_record_count": 0,
+        "final_state_hash": "f20e663a4b2412ebc0de315636ff785ecc4d102c9e6ba945abf0ab4d2a41c284",
+        "trace_hash": "debe95b5199003cc5a8c39c5f08182f46c911a8d8225cb369b3bfedbc6bb81fe"
+      }
+    ],
+    "penetration": {
+      "samples": [
+        47.667,
+        47.667,
+        47.667,
+        47.667,
+        47.667
+      ],
+      "mean": 47.667,
+      "std_sample": 0.0,
+      "ci95_student_t_half_width": 0.0,
+      "ci95_student_t_lower": 47.667,
+      "ci95_student_t_upper": 47.667,
+      "min": 47.667,
+      "max": 47.667,
+      "range": 0.0,
+      "median": 47.667
+    },
+    "steps": {
+      "samples": [
+        9.0,
+        9.0,
+        9.0,
+        9.0,
+        9.0
+      ],
+      "mean": 9.0,
+      "std_sample": 0.0,
+      "ci95_student_t_half_width": 0.0,
+      "ci95_student_t_lower": 9.0,
+      "ci95_student_t_upper": 9.0,
+      "min": 9.0,
+      "max": 9.0,
+      "range": 0.0,
+      "median": 9.0
+    },
+    "decision_requests": [
+      561,
+      561,
+      561,
+      561,
+      561
+    ],
+    "cloud_api_calls": [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "wall_seconds": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "final_state_hashes": [
+      "f20e663a4b2412ebc0de315636ff785ecc4d102c9e6ba945abf0ab4d2a41c284",
+      "f20e663a4b2412ebc0de315636ff785ecc4d102c9e6ba945abf0ab4d2a41c284",
+      "f20e663a4b2412ebc0de315636ff785ecc4d102c9e6ba945abf0ab4d2a41c284",
+      "f20e663a4b2412ebc0de315636ff785ecc4d102c9e6ba945abf0ab4d2a41c284",
+      "f20e663a4b2412ebc0de315636ff785ecc4d102c9e6ba945abf0ab4d2a41c284"
+    ],
+    "trace_hashes": [
+      "debe95b5199003cc5a8c39c5f08182f46c911a8d8225cb369b3bfedbc6bb81fe",
+      "debe95b5199003cc5a8c39c5f08182f46c911a8d8225cb369b3bfedbc6bb81fe",
+      "debe95b5199003cc5a8c39c5f08182f46c911a8d8225cb369b3bfedbc6bb81fe",
+      "debe95b5199003cc5a8c39c5f08182f46c911a8d8225cb369b3bfedbc6bb81fe",
+      "debe95b5199003cc5a8c39c5f08182f46c911a8d8225cb369b3bfedbc6bb81fe"
+    ]
+  },
+  "pairwise_hamming": {
+    "pairs": [
+      {
+        "pair": "fresh_run_01 vs fresh_run_02",
+        "hamming_pct": 0.0,
+        "penetration_i": 47.667,
+        "penetration_j": 47.667,
+        "steps_i": 9,
+        "steps_j": 9,
+        "state_hash_i": "f20e663a4b2412ebc0de315636ff785ecc4d102c9e6ba945abf0ab4d2a41c284",
+        "state_hash_j": "f20e663a4b2412ebc0de315636ff785ecc4d102c9e6ba945abf0ab4d2a41c284"
+      },
+      {
+        "pair": "fresh_run_01 vs fresh_run_03",
+        "hamming_pct": 0.0,
+        "penetration_i": 47.667,
+        "penetration_j": 47.667,
+        "steps_i": 9,
+        "steps_j": 9,
+        "state_hash_i": "f20e663a4b2412ebc0de315636ff785ecc4d102c9e6ba945abf0ab4d2a41c284",
+        "state_hash_j": "f20e663a4b2412ebc0de315636ff785ecc4d102c9e6ba945abf0ab4d2a41c284"
+      },
+      {
+        "pair": "fresh_run_01 vs fresh_run_04",
+        "hamming_pct": 0.0,
+        "penetration_i": 47.667,
+        "penetration_j": 47.667,
+        "steps_i": 9,
+        "steps_j": 9,
+        "state_hash_i": "f20e663a4b2412ebc0de315636ff785ecc4d102c9e6ba945abf0ab4d2a41c284",
+        "state_hash_j": "f20e663a4b2412ebc0de315636ff785ecc4d102c9e6ba945abf0ab4d2a41c284"
+      },
+      {
+        "pair": "fresh_run_01 vs fresh_run_05",
+        "hamming_pct": 0.0,
+        "penetration_i": 47.667,
+        "penetration_j": 47.667,
+        "steps_i": 9,
+        "steps_j": 9,
+        "state_hash_i": "f20e663a4b2412ebc0de315636ff785ecc4d102c9e6ba945abf0ab4d2a41c284",
+        "state_hash_j": "f20e663a4b2412ebc0de315636ff785ecc4d102c9e6ba945abf0ab4d2a41c284"
+      },
+      {
+        "pair": "fresh_run_02 vs fresh_run_03",
+        "hamming_pct": 0.0,
+        "penetration_i": 47.667,
+        "penetration_j": 47.667,
+        "steps_i": 9,
+        "steps_j": 9,
+        "state_hash_i": "f20e663a4b2412ebc0de315636ff785ecc4d102c9e6ba945abf0ab4d2a41c284",
+        "state_hash_j": "f20e663a4b2412ebc0de315636ff785ecc4d102c9e6ba945abf0ab4d2a41c284"
+      },
+      {
+        "pair": "fresh_run_02 vs fresh_run_04",
+        "hamming_pct": 0.0,
+        "penetration_i": 47.667,
+        "penetration_j": 47.667,
+        "steps_i": 9,
+        "steps_j": 9,
+        "state_hash_i": "f20e663a4b2412ebc0de315636ff785ecc4d102c9e6ba945abf0ab4d2a41c284",
+        "state_hash_j": "f20e663a4b2412ebc0de315636ff785ecc4d102c9e6ba945abf0ab4d2a41c284"
+      },
+      {
+        "pair": "fresh_run_02 vs fresh_run_05",
+        "hamming_pct": 0.0,
+        "penetration_i": 47.667,
+        "penetration_j": 47.667,
+        "steps_i": 9,
+        "steps_j": 9,
+        "state_hash_i": "f20e663a4b2412ebc0de315636ff785ecc4d102c9e6ba945abf0ab4d2a41c284",
+        "state_hash_j": "f20e663a4b2412ebc0de315636ff785ecc4d102c9e6ba945abf0ab4d2a41c284"
+      },
+      {
+        "pair": "fresh_run_03 vs fresh_run_04",
+        "hamming_pct": 0.0,
+        "penetration_i": 47.667,
+        "penetration_j": 47.667,
+        "steps_i": 9,
+        "steps_j": 9,
+        "state_hash_i": "f20e663a4b2412ebc0de315636ff785ecc4d102c9e6ba945abf0ab4d2a41c284",
+        "state_hash_j": "f20e663a4b2412ebc0de315636ff785ecc4d102c9e6ba945abf0ab4d2a41c284"
+      },
+      {
+        "pair": "fresh_run_03 vs fresh_run_05",
+        "hamming_pct": 0.0,
+        "penetration_i": 47.667,
+        "penetration_j": 47.667,
+        "steps_i": 9,
+        "steps_j": 9,
+        "state_hash_i": "f20e663a4b2412ebc0de315636ff785ecc4d102c9e6ba945abf0ab4d2a41c284",
+        "state_hash_j": "f20e663a4b2412ebc0de315636ff785ecc4d102c9e6ba945abf0ab4d2a41c284"
+      },
+      {
+        "pair": "fresh_run_04 vs fresh_run_05",
+        "hamming_pct": 0.0,
+        "penetration_i": 47.667,
+        "penetration_j": 47.667,
+        "steps_i": 9,
+        "steps_j": 9,
+        "state_hash_i": "f20e663a4b2412ebc0de315636ff785ecc4d102c9e6ba945abf0ab4d2a41c284",
+        "state_hash_j": "f20e663a4b2412ebc0de315636ff785ecc4d102c9e6ba945abf0ab4d2a41c284"
+      }
+    ],
+    "summary": {
+      "samples": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mean": 0.0,
+      "std_sample": 0.0,
+      "ci95_student_t_half_width": 0.0,
+      "ci95_student_t_lower": 0.0,
+      "ci95_student_t_upper": 0.0,
+      "min": 0.0,
+      "max": 0.0,
+      "range": 0.0,
+      "median": 0.0
+    },
+    "expected_pair_count": 10,
+    "observed_pair_count": 10
+  },
+  "cache_replay": {
+    "seed_run": "replay_seed_run_01",
+    "seed": {
+      "steps": 9,
+      "penetration": 47.666666666666664,
+      "converged": true,
+      "invalid": 0,
+      "fallback": 0,
+      "run_name": "replay_seed_run_01",
+      "started_utc": "2026-07-26T02:06:04+00:00",
+      "finished_utc": "2026-07-26T02:06:04+00:00",
+      "wall_seconds": 0.0,
+      "decision_requests": 561,
+      "cloud_api_calls": 0,
+      "cache_path": "results\\cache\\determinism_k5\\mock\\replay_seed_run_01.json",
+      "decision_record_count": 0,
+      "final_state_hash": "f20e663a4b2412ebc0de315636ff785ecc4d102c9e6ba945abf0ab4d2a41c284",
+      "trace_hash": "debe95b5199003cc5a8c39c5f08182f46c911a8d8225cb369b3bfedbc6bb81fe"
+    },
+    "replays": [
+      {
+        "replay": "replay_01_from_seed",
+        "penetration": 47.667,
+        "steps": 9,
+        "hamming_pct": 0.0,
+        "cloud_api_calls_during_replay": 0,
+        "penetration_exact": true,
+        "steps_exact": true,
+        "final_state_hash_exact": true,
+        "trace_hash_exact": true,
+        "exact_replay": true,
+        "final_state_hash": "f20e663a4b2412ebc0de315636ff785ecc4d102c9e6ba945abf0ab4d2a41c284",
+        "trace_hash": "debe95b5199003cc5a8c39c5f08182f46c911a8d8225cb369b3bfedbc6bb81fe"
+      },
+      {
+        "replay": "replay_02_from_seed",
+        "penetration": 47.667,
+        "steps": 9,
+        "hamming_pct": 0.0,
+        "cloud_api_calls_during_replay": 0,
+        "penetration_exact": true,
+        "steps_exact": true,
+        "final_state_hash_exact": true,
+        "trace_hash_exact": true,
+        "exact_replay": true,
+        "final_state_hash": "f20e663a4b2412ebc0de315636ff785ecc4d102c9e6ba945abf0ab4d2a41c284",
+        "trace_hash": "debe95b5199003cc5a8c39c5f08182f46c911a8d8225cb369b3bfedbc6bb81fe"
+      },
+      {
+        "replay": "replay_03_from_seed",
+        "penetration": 47.667,
+        "steps": 9,
+        "hamming_pct": 0.0,
+        "cloud_api_calls_during_replay": 0,
+        "penetration_exact": true,
+        "steps_exact": true,
+        "final_state_hash_exact": true,
+        "trace_hash_exact": true,
+        "exact_replay": true,
+        "final_state_hash": "f20e663a4b2412ebc0de315636ff785ecc4d102c9e6ba945abf0ab4d2a41c284",
+        "trace_hash": "debe95b5199003cc5a8c39c5f08182f46c911a8d8225cb369b3bfedbc6bb81fe"
+      }
+    ],
+    "cloud_api_calls_during_replay": [
+      0,
+      0,
+      0
+    ],
+    "all_replay_cloud_calls_zero": true,
+    "exact_match_count": 3,
+    "all_exact": true,
+    "all_final_state_hash_exact": true,
+    "all_trace_hash_exact": true
+  }
+}
