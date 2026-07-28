@@ -17,6 +17,7 @@ LEDS 框架 —— 阶段 2：离散事件驱动的马尔可夫状态机仿真�
   Prompt/Response 哈希与缓存复用在实验级实现（论文 3.4 节）。
 """
 import argparse
+from datetime import datetime, timezone
 import hashlib
 import json
 import os
@@ -54,6 +55,9 @@ class DeterministicLLM:
         self.mock = mock
         self.cache_path = cache_path
         self.call_count = 0
+        self.cache_hit_count = 0
+        self.cloud_request_count = 0
+        self.cloud_response_count = 0
         self.invalid_count = 0     # 越界/不可解析的原始输出次数（鲁棒性指标）
         self.fallback_count = 0    # 重试耗尽后触发安全回退的次数
         # 确定性缓存：零温度贪婪解码下，对相同 Prompt 的重复调用复用同一缓存响应，
@@ -85,12 +89,24 @@ class DeterministicLLM:
         last_err = None
         for attempt in range(config.API_MAX_RETRIES):
             try:
+                self.cloud_request_count += 1
                 resp = requests.post(config.LLM_BASE_URL, json=payload,
                                      headers=headers, timeout=config.API_TIMEOUT)
                 resp.raise_for_status()
+                self.cloud_response_count += 1
                 return resp.json()["choices"][0]["message"]["content"]
-            except Exception as err:  # 仅重试网络层瞬时故障，不影响解码确定性
+            except requests.HTTPError as err:
+                status_code = err.response.status_code if err.response is not None else 0
+                if status_code not in (408, 409, 425, 429) and status_code < 500:
+                    raise RuntimeError(
+                        f"LLM API 返回不可重试的 HTTP 状态码: {status_code}"
+                    ) from err
                 last_err = err
+            except requests.RequestException as err:
+                last_err = err
+            except (KeyError, TypeError, ValueError) as err:
+                raise RuntimeError("LLM API 返回结构不符合预期") from err
+            if attempt + 1 < config.API_MAX_RETRIES:
                 time.sleep(2 ** attempt)
         raise RuntimeError(f"LLM API 连续 {config.API_MAX_RETRIES} 次调用失败: {last_err}")
 
@@ -134,12 +150,24 @@ class DeterministicLLM:
         key = hashlib.sha256((SYSTEM_PROMPT + user_prompt).encode("utf-8")).hexdigest()
         # 有界重试：先用缓存，无效则重采样（Temperature>0 时可得到不同输出）
         for attempt in range(PARSE_MAX_RETRIES):
-            candidate = self.cache[key] if (attempt == 0 and key in self.cache) \
-                else self._call_api(user_prompt)
+            from_record = attempt == 0 and key in self.cache
+            if from_record:
+                self.cache_hit_count += 1
+                record = self.cache[key]
+                candidate = record.get("response", "") if isinstance(record, dict) else record
+            else:
+                candidate = self._call_api(user_prompt)
             try:
                 parsed = self._parse(candidate)
-                self.cache[key] = candidate
+                if not from_record:
+                    self.cache[key] = {
+                        "prompt": user_prompt,
+                        "response": candidate,
+                        "created_utc": datetime.now(timezone.utc).isoformat(),
+                    }
                 self._flush_cache()
+                parsed["_prompt_hash"] = key
+                parsed["_record_source"] = "record" if from_record else "cloud"
                 return parsed
             except ValueError:
                 self.invalid_count += 1
@@ -188,7 +216,8 @@ class DeterministicLLM:
 # LEDS 主引擎：Algorithm 1 确定性信息传播演化算法（论文 3.6 节）
 # ===========================================================================
 class LEDSEngine:
-    def __init__(self, config_path: str, mock: bool, t_max: int, tag: str = None):
+    def __init__(self, config_path: str, mock: bool, t_max: int, tag: str = None,
+                 cache_path: str = None, log_path: str = None):
         # tag: 可选输出命名后缀（用于跨后端对比，避免覆盖默认结果）
         # ------ 阶段 1 产物的只读解析（论文 3.1 节 Stage 1 / 3.2 节） ------
         with open(config_path, "r", encoding="utf-8") as f:
@@ -214,11 +243,12 @@ class LEDSEngine:
 
         # 缓存按后端隔离（否则换模型会回放上一个模型的响应，导致结果串味）
         backend = "mock" if mock else config.LLM_MODEL.replace("/", "-").replace(":", "-")
-        cache_path = os.path.join(config.CACHE_DIR,
-                                  f"{self.exp_name}_{backend}_cache.json")
+        explicit_cache_path = cache_path is not None
+        cache_path = cache_path or os.path.join(
+            config.CACHE_DIR, f"{self.exp_name}_{backend}_cache.json")
         # 向后兼容：早期缓存无模型后缀；默认模型下若新命名缺失而旧缓存存在，则一次性
         # 迁移复用，避免 run.bat 因缓存改名而重复真实调用（重复付费）。
-        if not mock and config.LLM_MODEL == "deepseek-chat":
+        if not explicit_cache_path and not mock and config.LLM_MODEL == "deepseek-chat":
             legacy = os.path.join(config.CACHE_DIR, f"{self.exp_name}_cache.json")
             if not os.path.exists(cache_path) and os.path.exists(legacy):
                 import shutil
@@ -227,6 +257,7 @@ class LEDSEngine:
         self.mock = mock
         # 输出命名后缀：显式提供 tag 时用于跨后端对比，避免覆盖默认（chat）结果
         self.out_suffix = f"_{tag}" if tag else ""
+        self.log_path = log_path
 
     # ------ 事件驱动传播（Algorithm 1 第 20-27 行） ------
     def _emit(self, sender: int, action: str, next_queue: dict) -> int:
@@ -288,6 +319,8 @@ class LEDSEngine:
                                  for m in messages],
                     "stance_before": prev_stance, "stance_after": result["stance"],
                     "action": result["action"],
+                    "decision_hash": result.get("_prompt_hash"),
+                    "decision_source": result.get("_record_source"),
                 })
 
             # Algorithm 1 第 30 行：t <- t + 1
@@ -311,15 +344,19 @@ class LEDSEngine:
             "converged": converged,
             "total_steps": t,
             "total_llm_calls": self.llm.call_count,
+            "cache_hit_count": self.llm.cache_hit_count,
+            "cloud_request_count": self.llm.cloud_request_count,
+            "cloud_response_count": self.llm.cloud_response_count,
+            "decision_record_count": len(self.llm.cache),
             "invalid_parse_count": self.llm.invalid_count,
             "fallback_count": self.llm.fallback_count,
             "final_penetration": final_penetration,
             "final_stance_distribution": self._distribution(),
             "steps": steps,
         }
-        os.makedirs(config.LOGS_DIR, exist_ok=True)
-        log_path = os.path.join(config.LOGS_DIR,
-                                f"{self.exp_name}{self.out_suffix}.json")
+        log_path = self.log_path or os.path.join(
+            config.LOGS_DIR, f"{self.exp_name}{self.out_suffix}.json")
+        os.makedirs(os.path.dirname(log_path), exist_ok=True)
         with open(log_path, "w", encoding="utf-8") as f:
             json.dump(report, f, ensure_ascii=False, indent=2)
         status = "稳态收敛(M_T=∅)" if converged else f"达到 T_max={self.t_max} 截断"

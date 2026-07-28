@@ -1,0 +1,10 @@
+{
+  "status": "completed",
+  "started_utc": "2026-07-28T05:52:35.302347+00:00",
+  "runs_per_deployment": 5,
+  "expected_run_count": 15,
+  "mock": false,
+  "model": "deepseek-chat",
+  "deployment_order_policy": "cyclic_rotation_by_round",
+  "finished_utc": "2026-07-28T08:35:24.712521+00:00"
+}
