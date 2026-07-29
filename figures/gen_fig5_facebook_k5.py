@@ -40,12 +40,14 @@ plt.rcParams.update(
             "Noto Sans CJK SC",
             "DejaVu Sans",
         ],
-        "font.size": 10,
-        "axes.labelsize": 10.5,
-        "legend.fontsize": 8.5,
+        "font.size": 8.5,
+        "axes.labelsize": 9,
+        "xtick.labelsize": 8,
+        "ytick.labelsize": 8,
+        "legend.fontsize": 7.2,
         "legend.frameon": False,
-        "figure.dpi": 300,
-        "savefig.dpi": 300,
+        "figure.dpi": 600,
+        "savefig.dpi": 600,
         "savefig.bbox": "tight",
         "axes.spines.top": False,
         "axes.spines.right": False,
@@ -66,7 +68,7 @@ def main() -> None:
     if summary["completed_run_count"] != summary["expected_run_count"]:
         raise RuntimeError("Facebook K=5 experiment is incomplete")
 
-    fig, ax = plt.subplots(figsize=(7.0, 5.0), constrained_layout=True)
+    fig, ax = plt.subplots(figsize=(3.3, 2.55), constrained_layout=True)
     jitter = np.array([-0.16, -0.08, 0.0, 0.08, 0.16])
 
     for index, (key, label, color, marker) in enumerate(
@@ -82,7 +84,7 @@ def main() -> None:
         ax.scatter(
             index + jitter,
             samples,
-            s=54,
+            s=26,
             marker=marker,
             color=color,
             alpha=0.88,
@@ -95,41 +97,41 @@ def main() -> None:
             mean,
             yerr=np.array([[mean - ci_low], [ci_high - mean]]),
             fmt="D",
-            markersize=7.5,
+            markersize=5.5,
             markerfacecolor="white",
             markeredgecolor=color,
-            markeredgewidth=1.8,
+            markeredgewidth=1.3,
             ecolor=color,
-            elinewidth=2.0,
-            capsize=5,
-            capthick=1.6,
+            elinewidth=1.4,
+            capsize=3.5,
+            capthick=1.2,
             zorder=4,
         )
 
-    ax.scatter([], [], s=54, color="#666666", edgecolor="white", label="无判定记录独立运行")
+    ax.scatter([], [], s=26, color="#666666", edgecolor="white", label="独立运行")
     ax.errorbar(
         [],
         [],
         yerr=[],
         fmt="D",
-        markersize=7.5,
+        markersize=5.5,
         markerfacecolor="white",
         markeredgecolor="#444444",
         markeredgewidth=1.6,
         ecolor="#444444",
         capsize=5,
-        label="均值及95% Student-t置信区间",
+        label="均值及95%置信区间",
     )
     ax.set_xticks(range(3), LABELS)
     ax.set_ylabel("最终渗透率/%")
     ax.set_xlim(-0.45, 2.45)
     ax.set_ylim(-1.0, 30.5)
     ax.set_yticks(np.arange(0, 31, 5))
-    ax.legend(loc="upper right")
+    ax.legend(loc="upper right", handlelength=1.4)
 
     out_png = OUT_DIR / "fig5_facebook_k5.png"
     out_pdf = OUT_DIR / "fig5_facebook_k5.pdf"
-    fig.savefig(out_png, dpi=300)
+    fig.savefig(out_png, dpi=600)
     fig.savefig(out_pdf)
     plt.close(fig)
     print(out_png)
