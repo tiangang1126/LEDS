@@ -1,0 +1,29 @@
+{
+  "created_utc": "2026-07-28T19:10:25+00:00",
+  "files": {
+    "api_full_leds_replay/run_summary.json": {
+      "bytes": 577757,
+      "sha256": "ab22b8ae11d0f200606154a5ed4d9f260dfa6aaac1bdec270d3785ade5050234"
+    },
+    "api_random_order_seed_20260729/run_summary.json": {
+      "bytes": 577635,
+      "sha256": "54a8461d431d05981c9d3c2451d00224f73d934518576ee89cca265d916e0cc5"
+    },
+    "mechanism_ablation.json": {
+      "bytes": 38126,
+      "sha256": "18d47e380a728a24000e9a2574f05741dcec0a47bc7c5491913de51490b70c33"
+    },
+    "structural_full_leds/run_summary.json": {
+      "bytes": 519913,
+      "sha256": "b0c5fa110bcf51268198dc776b4a3ee4e2d144e87098c57bf6faa08d7b49f84d"
+    },
+    "structural_no_novelty_filter/run_summary.json": {
+      "bytes": 8001763,
+      "sha256": "dcae098574488097289b66b78a206c70927e3e986628f35a827fe88cf569ea00"
+    },
+    "structural_rule_decision_record.json": {
+      "bytes": 6000730,
+      "sha256": "05921e9929d2d6e1281d947129f19137059478793b355c40b47d8053e70c8fb9"
+    }
+  }
+}

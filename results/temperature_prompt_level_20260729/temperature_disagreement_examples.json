@@ -1,0 +1,597 @@
+[
+  {
+    "temperature": 0.0,
+    "prompt_id": "susceptible_035",
+    "persona": "susceptible",
+    "outputs": [
+      "('Accept', 'Share')",
+      "('Reject', 'Ignore')"
+    ]
+  },
+  {
+    "temperature": 0.0,
+    "prompt_id": "susceptible_036",
+    "persona": "susceptible",
+    "outputs": [
+      "('Accept', 'Share')",
+      "('Reject', 'Ignore')"
+    ]
+  },
+  {
+    "temperature": 0.0,
+    "prompt_id": "susceptible_050",
+    "persona": "susceptible",
+    "outputs": [
+      "('Accept', 'Share')",
+      "('Reject', 'Ignore')"
+    ]
+  },
+  {
+    "temperature": 0.0,
+    "prompt_id": "susceptible_059",
+    "persona": "susceptible",
+    "outputs": [
+      "('Accept', 'Share')",
+      "('Reject', 'Ignore')"
+    ]
+  },
+  {
+    "temperature": 0.0,
+    "prompt_id": "neutral_010",
+    "persona": "neutral",
+    "outputs": [
+      "('Neutral', 'Ignore')",
+      "('Reject', 'Ignore')"
+    ]
+  },
+  {
+    "temperature": 0.0,
+    "prompt_id": "neutral_014",
+    "persona": "neutral",
+    "outputs": [
+      "('Neutral', 'Ignore')",
+      "('Reject', 'Ignore')"
+    ]
+  },
+  {
+    "temperature": 0.0,
+    "prompt_id": "neutral_022",
+    "persona": "neutral",
+    "outputs": [
+      "('Accept', 'Share')",
+      "('Neutral', 'Ignore')"
+    ]
+  },
+  {
+    "temperature": 0.0,
+    "prompt_id": "neutral_029",
+    "persona": "neutral",
+    "outputs": [
+      "('Neutral', 'Ignore')",
+      "('Reject', 'Ignore')"
+    ]
+  },
+  {
+    "temperature": 0.0,
+    "prompt_id": "neutral_052",
+    "persona": "neutral",
+    "outputs": [
+      "('Accept', 'Share')",
+      "('Reject', 'Ignore')"
+    ]
+  },
+  {
+    "temperature": 0.0,
+    "prompt_id": "neutral_055",
+    "persona": "neutral",
+    "outputs": [
+      "('Accept', 'Share')",
+      "('Reject', 'Ignore')"
+    ]
+  },
+  {
+    "temperature": 0.0,
+    "prompt_id": "neutral_064",
+    "persona": "neutral",
+    "outputs": [
+      "('Accept', 'Share')",
+      "('Reject', 'Ignore')"
+    ]
+  },
+  {
+    "temperature": 0.0,
+    "prompt_id": "neutral_066",
+    "persona": "neutral",
+    "outputs": [
+      "('Accept', 'Share')",
+      "('Reject', 'Ignore')"
+    ]
+  },
+  {
+    "temperature": 0.0,
+    "prompt_id": "neutral_078",
+    "persona": "neutral",
+    "outputs": [
+      "('Accept', 'Share')",
+      "('Reject', 'Ignore')"
+    ]
+  },
+  {
+    "temperature": 0.0,
+    "prompt_id": "fact_checker_027",
+    "persona": "fact_checker",
+    "outputs": [
+      "('Reject', 'Debunk')",
+      "('Reject', 'Ignore')"
+    ]
+  },
+  {
+    "temperature": 0.0,
+    "prompt_id": "fact_checker_048",
+    "persona": "fact_checker",
+    "outputs": [
+      "('Reject', 'Debunk')",
+      "('Reject', 'Ignore')"
+    ]
+  },
+  {
+    "temperature": 0.0,
+    "prompt_id": "fact_checker_054",
+    "persona": "fact_checker",
+    "outputs": [
+      "('Reject', 'Debunk')",
+      "('Reject', 'Ignore')"
+    ]
+  },
+  {
+    "temperature": 0.2,
+    "prompt_id": "susceptible_036",
+    "persona": "susceptible",
+    "outputs": [
+      "('Accept', 'Share')",
+      "('Reject', 'Ignore')"
+    ]
+  },
+  {
+    "temperature": 0.2,
+    "prompt_id": "susceptible_043",
+    "persona": "susceptible",
+    "outputs": [
+      "('Accept', 'Share')",
+      "('Reject', 'Ignore')"
+    ]
+  },
+  {
+    "temperature": 0.2,
+    "prompt_id": "susceptible_059",
+    "persona": "susceptible",
+    "outputs": [
+      "('Accept', 'Share')",
+      "('Reject', 'Ignore')"
+    ]
+  },
+  {
+    "temperature": 0.2,
+    "prompt_id": "susceptible_071",
+    "persona": "susceptible",
+    "outputs": [
+      "('Accept', 'Share')",
+      "('Reject', 'Ignore')"
+    ]
+  },
+  {
+    "temperature": 0.2,
+    "prompt_id": "neutral_010",
+    "persona": "neutral",
+    "outputs": [
+      "('Neutral', 'Ignore')",
+      "('Reject', 'Ignore')"
+    ]
+  },
+  {
+    "temperature": 0.2,
+    "prompt_id": "neutral_014",
+    "persona": "neutral",
+    "outputs": [
+      "('Neutral', 'Ignore')",
+      "('Reject', 'Ignore')"
+    ]
+  },
+  {
+    "temperature": 0.2,
+    "prompt_id": "neutral_017",
+    "persona": "neutral",
+    "outputs": [
+      "('Neutral', 'Ignore')",
+      "('Reject', 'Ignore')"
+    ]
+  },
+  {
+    "temperature": 0.2,
+    "prompt_id": "neutral_022",
+    "persona": "neutral",
+    "outputs": [
+      "('Accept', 'Share')",
+      "('Neutral', 'Ignore')"
+    ]
+  },
+  {
+    "temperature": 0.2,
+    "prompt_id": "neutral_040",
+    "persona": "neutral",
+    "outputs": [
+      "('Accept', 'Share')",
+      "('Reject', 'Ignore')"
+    ]
+  },
+  {
+    "temperature": 0.2,
+    "prompt_id": "neutral_057",
+    "persona": "neutral",
+    "outputs": [
+      "('Accept', 'Share')",
+      "('Reject', 'Ignore')"
+    ]
+  },
+  {
+    "temperature": 0.2,
+    "prompt_id": "fact_checker_004",
+    "persona": "fact_checker",
+    "outputs": [
+      "('Reject', 'Debunk')",
+      "('Reject', 'Ignore')"
+    ]
+  },
+  {
+    "temperature": 0.2,
+    "prompt_id": "fact_checker_030",
+    "persona": "fact_checker",
+    "outputs": [
+      "('Reject', 'Debunk')",
+      "('Reject', 'Ignore')"
+    ]
+  },
+  {
+    "temperature": 0.2,
+    "prompt_id": "fact_checker_051",
+    "persona": "fact_checker",
+    "outputs": [
+      "('Reject', 'Debunk')",
+      "('Reject', 'Ignore')"
+    ]
+  },
+  {
+    "temperature": 0.2,
+    "prompt_id": "fact_checker_058",
+    "persona": "fact_checker",
+    "outputs": [
+      "('Reject', 'Debunk')",
+      "('Reject', 'Ignore')"
+    ]
+  },
+  {
+    "temperature": 0.2,
+    "prompt_id": "fact_checker_068",
+    "persona": "fact_checker",
+    "outputs": [
+      "('Reject', 'Debunk')",
+      "('Reject', 'Ignore')"
+    ]
+  },
+  {
+    "temperature": 0.5,
+    "prompt_id": "susceptible_022",
+    "persona": "susceptible",
+    "outputs": [
+      "('Accept', 'Share')",
+      "('Reject', 'Ignore')"
+    ]
+  },
+  {
+    "temperature": 0.5,
+    "prompt_id": "susceptible_025",
+    "persona": "susceptible",
+    "outputs": [
+      "('Accept', 'Share')",
+      "('Reject', 'Ignore')"
+    ]
+  },
+  {
+    "temperature": 0.5,
+    "prompt_id": "susceptible_035",
+    "persona": "susceptible",
+    "outputs": [
+      "('Accept', 'Share')",
+      "('Reject', 'Ignore')"
+    ]
+  },
+  {
+    "temperature": 0.5,
+    "prompt_id": "susceptible_043",
+    "persona": "susceptible",
+    "outputs": [
+      "('Accept', 'Share')",
+      "('Reject', 'Ignore')"
+    ]
+  },
+  {
+    "temperature": 0.5,
+    "prompt_id": "susceptible_059",
+    "persona": "susceptible",
+    "outputs": [
+      "('Accept', 'Share')",
+      "('Reject', 'Ignore')"
+    ]
+  },
+  {
+    "temperature": 0.5,
+    "prompt_id": "susceptible_071",
+    "persona": "susceptible",
+    "outputs": [
+      "('Accept', 'Share')",
+      "('Reject', 'Ignore')"
+    ]
+  },
+  {
+    "temperature": 0.5,
+    "prompt_id": "neutral_010",
+    "persona": "neutral",
+    "outputs": [
+      "('Accept', 'Share')",
+      "('Neutral', 'Ignore')"
+    ]
+  },
+  {
+    "temperature": 0.5,
+    "prompt_id": "neutral_014",
+    "persona": "neutral",
+    "outputs": [
+      "('Neutral', 'Ignore')",
+      "('Reject', 'Ignore')"
+    ]
+  },
+  {
+    "temperature": 0.5,
+    "prompt_id": "neutral_017",
+    "persona": "neutral",
+    "outputs": [
+      "('Neutral', 'Ignore')",
+      "('Reject', 'Ignore')"
+    ]
+  },
+  {
+    "temperature": 0.5,
+    "prompt_id": "neutral_022",
+    "persona": "neutral",
+    "outputs": [
+      "('Accept', 'Share')",
+      "('Neutral', 'Ignore')"
+    ]
+  },
+  {
+    "temperature": 0.5,
+    "prompt_id": "neutral_055",
+    "persona": "neutral",
+    "outputs": [
+      "('Accept', 'Share')",
+      "('Reject', 'Ignore')"
+    ]
+  },
+  {
+    "temperature": 0.5,
+    "prompt_id": "neutral_057",
+    "persona": "neutral",
+    "outputs": [
+      "('Accept', 'Share')",
+      "('Reject', 'Ignore')"
+    ]
+  },
+  {
+    "temperature": 0.5,
+    "prompt_id": "neutral_066",
+    "persona": "neutral",
+    "outputs": [
+      "('Accept', 'Share')",
+      "('Reject', 'Ignore')"
+    ]
+  },
+  {
+    "temperature": 0.5,
+    "prompt_id": "neutral_078",
+    "persona": "neutral",
+    "outputs": [
+      "('Accept', 'Share')",
+      "('Reject', 'Ignore')"
+    ]
+  },
+  {
+    "temperature": 0.5,
+    "prompt_id": "fact_checker_014",
+    "persona": "fact_checker",
+    "outputs": [
+      "('Reject', 'Debunk')",
+      "('Reject', 'Ignore')"
+    ]
+  },
+  {
+    "temperature": 0.5,
+    "prompt_id": "fact_checker_021",
+    "persona": "fact_checker",
+    "outputs": [
+      "('Reject', 'Debunk')",
+      "('Reject', 'Ignore')"
+    ]
+  },
+  {
+    "temperature": 0.5,
+    "prompt_id": "fact_checker_051",
+    "persona": "fact_checker",
+    "outputs": [
+      "('Reject', 'Debunk')",
+      "('Reject', 'Ignore')"
+    ]
+  },
+  {
+    "temperature": 0.7,
+    "prompt_id": "susceptible_017",
+    "persona": "susceptible",
+    "outputs": [
+      "('Accept', 'Share')",
+      "('Reject', 'Ignore')"
+    ]
+  },
+  {
+    "temperature": 0.7,
+    "prompt_id": "susceptible_043",
+    "persona": "susceptible",
+    "outputs": [
+      "('Accept', 'Share')",
+      "('Reject', 'Ignore')"
+    ]
+  },
+  {
+    "temperature": 0.7,
+    "prompt_id": "susceptible_059",
+    "persona": "susceptible",
+    "outputs": [
+      "('Accept', 'Share')",
+      "('Reject', 'Ignore')"
+    ]
+  },
+  {
+    "temperature": 0.7,
+    "prompt_id": "susceptible_061",
+    "persona": "susceptible",
+    "outputs": [
+      "('Accept', 'Share')",
+      "('Reject', 'Ignore')"
+    ]
+  },
+  {
+    "temperature": 0.7,
+    "prompt_id": "susceptible_070",
+    "persona": "susceptible",
+    "outputs": [
+      "('Accept', 'Share')",
+      "('Reject', 'Ignore')"
+    ]
+  },
+  {
+    "temperature": 0.7,
+    "prompt_id": "susceptible_071",
+    "persona": "susceptible",
+    "outputs": [
+      "('Accept', 'Share')",
+      "('Reject', 'Ignore')"
+    ]
+  },
+  {
+    "temperature": 0.7,
+    "prompt_id": "neutral_022",
+    "persona": "neutral",
+    "outputs": [
+      "('Accept', 'Ignore')",
+      "('Accept', 'Share')",
+      "('Neutral', 'Ignore')"
+    ]
+  },
+  {
+    "temperature": 0.7,
+    "prompt_id": "neutral_029",
+    "persona": "neutral",
+    "outputs": [
+      "('Neutral', 'Ignore')",
+      "('Reject', 'Ignore')"
+    ]
+  },
+  {
+    "temperature": 0.7,
+    "prompt_id": "neutral_052",
+    "persona": "neutral",
+    "outputs": [
+      "('Accept', 'Share')",
+      "('Reject', 'Ignore')"
+    ]
+  },
+  {
+    "temperature": 0.7,
+    "prompt_id": "neutral_055",
+    "persona": "neutral",
+    "outputs": [
+      "('Accept', 'Share')",
+      "('Reject', 'Ignore')"
+    ]
+  },
+  {
+    "temperature": 0.7,
+    "prompt_id": "neutral_057",
+    "persona": "neutral",
+    "outputs": [
+      "('Accept', 'Share')",
+      "('Reject', 'Ignore')"
+    ]
+  },
+  {
+    "temperature": 0.7,
+    "prompt_id": "neutral_064",
+    "persona": "neutral",
+    "outputs": [
+      "('Accept', 'Share')",
+      "('Reject', 'Ignore')"
+    ]
+  },
+  {
+    "temperature": 0.7,
+    "prompt_id": "neutral_066",
+    "persona": "neutral",
+    "outputs": [
+      "('Accept', 'Share')",
+      "('Reject', 'Ignore')"
+    ]
+  },
+  {
+    "temperature": 0.7,
+    "prompt_id": "neutral_068",
+    "persona": "neutral",
+    "outputs": [
+      "('Accept', 'Share')",
+      "('Reject', 'Ignore')"
+    ]
+  },
+  {
+    "temperature": 0.7,
+    "prompt_id": "neutral_075",
+    "persona": "neutral",
+    "outputs": [
+      "('Accept', 'Share')",
+      "('Reject', 'Ignore')"
+    ]
+  },
+  {
+    "temperature": 0.7,
+    "prompt_id": "fact_checker_006",
+    "persona": "fact_checker",
+    "outputs": [
+      "('Reject', 'Debunk')",
+      "('Reject', 'Share')"
+    ]
+  },
+  {
+    "temperature": 0.7,
+    "prompt_id": "fact_checker_027",
+    "persona": "fact_checker",
+    "outputs": [
+      "('Reject', 'Debunk')",
+      "('Reject', 'Ignore')"
+    ]
+  },
+  {
+    "temperature": 0.7,
+    "prompt_id": "fact_checker_077",
+    "persona": "fact_checker",
+    "outputs": [
+      "('Reject', 'Debunk')",
+      "('Reject', 'Ignore')"
+    ]
+  }
+]

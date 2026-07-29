@@ -1,0 +1,4 @@
+﻿comparison,prompt_n,joint_rule_acc_diff_pct,paired_prompt_bootstrap_ci95_low,paired_prompt_bootstrap_ci95_high,noninferiority_margin_pct,noninferiority_established,bootstrap_resamples,bootstrap_seed
+T=0.0 minus T=0.2,240,-0.14,-1.53,1.25,3.0,True,50000,20260729
+T=0.0 minus T=0.5,240,0.42,-0.97,1.81,3.0,True,50000,20260729
+T=0.0 minus T=0.7,240,0.14,-1.25,1.53,3.0,True,50000,20260729

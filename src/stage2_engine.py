@@ -22,6 +22,7 @@ import hashlib
 import json
 import os
 import re
+import random
 import sys
 import time
 from collections import defaultdict
@@ -51,9 +52,12 @@ def _is_reasoning_model(model: str) -> bool:
 class DeterministicLLM:
     """将 LLM 降维为纯粹的逻辑判别器（论文 2 节末段、3.4 节）。"""
 
-    def __init__(self, mock: bool, cache_path: str):
+    def __init__(self, mock: bool, cache_path: str,
+                 read_records: bool = True, write_records: bool = True):
         self.mock = mock
         self.cache_path = cache_path
+        self.read_records = read_records
+        self.write_records = write_records
         self.call_count = 0
         self.cache_hit_count = 0
         self.cloud_request_count = 0
@@ -63,7 +67,7 @@ class DeterministicLLM:
         # 确定性缓存：零温度贪婪解码下，对相同 Prompt 的重复调用复用同一缓存响应，
         # 从而在实验级实现可重放一致性（论文 3.4 节；不假设云端物理级字节确定性）。
         self.cache = {}
-        if os.path.exists(cache_path):
+        if self.read_records and os.path.exists(cache_path):
             with open(cache_path, "r", encoding="utf-8") as f:
                 self.cache = json.load(f)
 
@@ -150,7 +154,8 @@ class DeterministicLLM:
         key = hashlib.sha256((SYSTEM_PROMPT + user_prompt).encode("utf-8")).hexdigest()
         # 有界重试：先用缓存，无效则重采样（Temperature>0 时可得到不同输出）
         for attempt in range(PARSE_MAX_RETRIES):
-            from_record = attempt == 0 and key in self.cache
+            from_record = (self.read_records and attempt == 0
+                           and key in self.cache)
             if from_record:
                 self.cache_hit_count += 1
                 record = self.cache[key]
@@ -159,13 +164,14 @@ class DeterministicLLM:
                 candidate = self._call_api(user_prompt)
             try:
                 parsed = self._parse(candidate)
-                if not from_record:
+                if not from_record and self.write_records:
                     self.cache[key] = {
                         "prompt": user_prompt,
                         "response": candidate,
                         "created_utc": datetime.now(timezone.utc).isoformat(),
                     }
-                self._flush_cache()
+                if self.write_records:
+                    self._flush_cache()
                 parsed["_prompt_hash"] = key
                 parsed["_record_source"] = "record" if from_record else "cloud"
                 return parsed
@@ -217,7 +223,10 @@ class DeterministicLLM:
 # ===========================================================================
 class LEDSEngine:
     def __init__(self, config_path: str, mock: bool, t_max: int, tag: str = None,
-                 cache_path: str = None, log_path: str = None):
+                 cache_path: str = None, log_path: str = None,
+                 schedule: str = "fixed", novelty_filter: bool = True,
+                 read_records: bool = True, write_records: bool = True,
+                 schedule_seed: int = 0):
         # tag: 可选输出命名后缀（用于跨后端对比，避免覆盖默认结果）
         # ------ 阶段 1 产物的只读解析（论文 3.1 节 Stage 1 / 3.2 节） ------
         with open(config_path, "r", encoding="utf-8") as f:
@@ -240,6 +249,12 @@ class LEDSEngine:
         self.debunk_count = defaultdict(int)   # 累计收到辟谣的不同邻居数
         self.sent_edges = set()                # 边级去重：{(u, v, msg_type)}
         self.t_max = t_max
+        if schedule not in {"fixed", "random"}:
+            raise ValueError("schedule must be 'fixed' or 'random'")
+        self.schedule = schedule
+        self.novelty_filter = novelty_filter
+        self.schedule_seed = schedule_seed
+        self._schedule_rng = random.Random(schedule_seed)
 
         # 缓存按后端隔离（否则换模型会回放上一个模型的响应，导致结果串味）
         backend = "mock" if mock else config.LLM_MODEL.replace("/", "-").replace(":", "-")
@@ -253,7 +268,10 @@ class LEDSEngine:
             if not os.path.exists(cache_path) and os.path.exists(legacy):
                 import shutil
                 shutil.copyfile(legacy, cache_path)
-        self.llm = DeterministicLLM(mock=mock, cache_path=cache_path)
+        self.llm = DeterministicLLM(
+            mock=mock, cache_path=cache_path,
+            read_records=read_records, write_records=write_records,
+        )
         self.mock = mock
         # 输出命名后缀：显式提供 tag 时用于跨后端对比，避免覆盖默认（chat）结果
         self.out_suffix = f"_{tag}" if tag else ""
@@ -268,9 +286,10 @@ class LEDSEngine:
             # 去重过滤机制（论文 3.5 节）：仅传递包含新信息增量的消息，
             # 同一条有向边对同一消息种类至多传递一次，保证单调耗散。
             edge_key = (sender, neighbor, msg_type)
-            if edge_key in self.sent_edges:
+            if self.novelty_filter and edge_key in self.sent_edges:
                 continue
-            self.sent_edges.add(edge_key)
+            if self.novelty_filter:
+                self.sent_edges.add(edge_key)
             next_queue[neighbor].append(
                 {"type": msg_type, "content": content, "sender": sender})
             emitted += 1
@@ -292,7 +311,10 @@ class LEDSEngine:
             calls_before = self.llm.call_count
 
             # Algorithm 1 第 6 行：严格按全局节点 ID 顺序单线程遍历活跃节点
-            for node in sorted(queue.keys()):
+            nodes = sorted(queue.keys())
+            if self.schedule == "random":
+                self._schedule_rng.shuffle(nodes)
+            for node in nodes:
                 messages = queue[node]
                 # 更新累计曝光计数（内部信念状态 S 的定量分量）
                 for m in messages:
@@ -350,7 +372,13 @@ class LEDSEngine:
             "decision_record_count": len(self.llm.cache),
             "invalid_parse_count": self.llm.invalid_count,
             "fallback_count": self.llm.fallback_count,
+            "schedule": self.schedule,
+            "novelty_filter": self.novelty_filter,
+            "record_read": self.llm.read_records,
+            "record_write": self.llm.write_records,
+            "schedule_seed": self.schedule_seed,
             "final_penetration": final_penetration,
+            "final_stances": {str(k): self.stances[k] for k in sorted(self.stances)},
             "final_stance_distribution": self._distribution(),
             "steps": steps,
         }

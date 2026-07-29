@@ -1,0 +1,116 @@
+{
+  "analysis_unit": "prompt_cluster",
+  "pairing_unit": "prompt_id",
+  "stratification": "persona",
+  "repeat_aggregation": "mean of three rule-correct indicators per Prompt and temperature",
+  "interval_method": "persona-stratified paired Prompt-cluster percentile bootstrap",
+  "raw_input": "experiments/temperature_sensitivity/raw_outputs_deepseek_v4_flash.jsonl",
+  "raw_input_sha256": "d5b2c9cd9f3f8ffa682e8d33f7eba1c2f698b33ba06ecb167bdde98ceaa08f53",
+  "raw_output_rows": 2880,
+  "prompt_temperature_clusters": 960,
+  "unique_prompts": 240,
+  "temperatures": [
+    0.0,
+    0.2,
+    0.5,
+    0.7
+  ],
+  "repeats_per_prompt_temperature": 3,
+  "bootstrap_resamples": 50000,
+  "bootstrap_seed": 20260729,
+  "noninferiority_margin_percentage_points": 3.0,
+  "noninferiority_interpretation": "Exploratory support at the analysis margin; not a preregistered confirmatory noninferiority trial.",
+  "temperature_summary": [
+    {
+      "temperature": 0.0,
+      "prompt_n": 240,
+      "output_n": 720,
+      "repeats_per_prompt": 3,
+      "joint_rule_acc": 67.22,
+      "joint_rule_cluster_bootstrap_ci95_low": 61.53,
+      "joint_rule_cluster_bootstrap_ci95_high": 72.78,
+      "stance_acc": 73.89,
+      "action_acc": 81.81,
+      "json_valid": 100.0,
+      "bootstrap_resamples": 50000,
+      "bootstrap_seed": 20260729
+    },
+    {
+      "temperature": 0.2,
+      "prompt_n": 240,
+      "output_n": 720,
+      "repeats_per_prompt": 3,
+      "joint_rule_acc": 67.36,
+      "joint_rule_cluster_bootstrap_ci95_low": 61.67,
+      "joint_rule_cluster_bootstrap_ci95_high": 72.92,
+      "stance_acc": 74.03,
+      "action_acc": 81.81,
+      "json_valid": 100.0,
+      "bootstrap_resamples": 50000,
+      "bootstrap_seed": 20260729
+    },
+    {
+      "temperature": 0.5,
+      "prompt_n": 240,
+      "output_n": 720,
+      "repeats_per_prompt": 3,
+      "joint_rule_acc": 66.81,
+      "joint_rule_cluster_bootstrap_ci95_low": 61.11,
+      "joint_rule_cluster_bootstrap_ci95_high": 72.36,
+      "stance_acc": 73.19,
+      "action_acc": 81.25,
+      "json_valid": 100.0,
+      "bootstrap_resamples": 50000,
+      "bootstrap_seed": 20260729
+    },
+    {
+      "temperature": 0.7,
+      "prompt_n": 240,
+      "output_n": 720,
+      "repeats_per_prompt": 3,
+      "joint_rule_acc": 67.08,
+      "joint_rule_cluster_bootstrap_ci95_low": 61.39,
+      "joint_rule_cluster_bootstrap_ci95_high": 72.64,
+      "stance_acc": 73.61,
+      "action_acc": 81.53,
+      "json_valid": 100.0,
+      "bootstrap_resamples": 50000,
+      "bootstrap_seed": 20260729
+    }
+  ],
+  "paired_differences": [
+    {
+      "comparison": "T=0.0 minus T=0.2",
+      "prompt_n": 240,
+      "joint_rule_acc_diff_pct": -0.14,
+      "paired_prompt_bootstrap_ci95_low": -1.53,
+      "paired_prompt_bootstrap_ci95_high": 1.25,
+      "noninferiority_margin_pct": 3.0,
+      "noninferiority_established": true,
+      "bootstrap_resamples": 50000,
+      "bootstrap_seed": 20260729
+    },
+    {
+      "comparison": "T=0.0 minus T=0.5",
+      "prompt_n": 240,
+      "joint_rule_acc_diff_pct": 0.42,
+      "paired_prompt_bootstrap_ci95_low": -0.97,
+      "paired_prompt_bootstrap_ci95_high": 1.81,
+      "noninferiority_margin_pct": 3.0,
+      "noninferiority_established": true,
+      "bootstrap_resamples": 50000,
+      "bootstrap_seed": 20260729
+    },
+    {
+      "comparison": "T=0.0 minus T=0.7",
+      "prompt_n": 240,
+      "joint_rule_acc_diff_pct": 0.14,
+      "paired_prompt_bootstrap_ci95_low": -1.25,
+      "paired_prompt_bootstrap_ci95_high": 1.53,
+      "noninferiority_margin_pct": 3.0,
+      "noninferiority_established": true,
+      "bootstrap_resamples": 50000,
+      "bootstrap_seed": 20260729
+    }
+  ]
+}
